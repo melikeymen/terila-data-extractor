@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+out/
+bin/
+*.class
+hs_err_pid*
+
+# Downloaded Minecraft artifacts (bundler + client jar, ~100 MB)
+.mc-cache/
+
+# Local scratch space and IDE output
+tmp_probe/
+logs/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Runtime lock file kept beside an output directory
+.terila-extractor-lock-*
+
+# Local-only environment / tooling files
+.env
+.env.*
+!.env.example
+.cloud-attachments/

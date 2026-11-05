@@ -1,0 +1,20 @@
+{
+  "protocol": 777,
+  "client_tag_registries": [
+    "minecraft:banner_pattern",
+    "minecraft:block",
+    "minecraft:damage_type",
+    "minecraft:dialog",
+    "minecraft:enchantment",
+    "minecraft:entity_type",
+    "minecraft:fluid",
+    "minecraft:game_event",
+    "minecraft:instrument",
+    "minecraft:item",
+    "minecraft:painting_variant",
+    "minecraft:point_of_interest_type",
+    "minecraft:potion",
+    "minecraft:timeline",
+    "minecraft:worldgen/biome"
+  ]
+}

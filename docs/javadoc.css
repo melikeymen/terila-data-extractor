@@ -1,0 +1,343 @@
+/*
+ * Terila Data Extractor — API documentation stylesheet.
+ *
+ * Deliberately plain. This is what javadoc looked like before it got a design system: Arial at
+ * 12px, blue underlined links, grey table headers, one-pixel borders, no shadows, no rounded
+ * corners, no dark mode. It is loaded after the stock stylesheet, so the generated pages keep
+ * their structure and only the appearance changes.
+ */
+
+:root {
+    color-scheme: light only;
+}
+
+* {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+html,
+body {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    margin: 6px 10px 12px 10px !important;
+}
+
+/* ---- links: the 1990s palette ------------------------------------------------------------- */
+
+a:link {
+    color: #0000ee !important;
+    text-decoration: underline !important;
+}
+
+a:visited {
+    color: #551a8b !important;
+}
+
+a:hover,
+a:focus {
+    color: #cc0000 !important;
+    background: #ffffcc;
+}
+
+a[name],
+a[id] {
+    color: inherit !important;
+}
+
+/* ---- headings ----------------------------------------------------------------------------- */
+
+h1 {
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin: 8px 0 6px 0 !important;
+    color: #000000 !important;
+}
+
+h2 {
+    font-size: 15px !important;
+    font-weight: bold !important;
+    margin: 16px 0 6px 0 !important;
+    border-bottom: 1px solid #999999;
+    padding-bottom: 2px;
+}
+
+h3 {
+    font-size: 13px !important;
+    font-weight: bold !important;
+    margin: 12px 0 4px 0 !important;
+}
+
+h4 {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    margin: 10px 0 3px 0 !important;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #999999;
+    height: 0;
+    margin: 10px 0;
+}
+
+/* ---- the grey navigation bars -------------------------------------------------------------- */
+
+.top-nav,
+.sub-nav,
+.nav-bar,
+.about-language {
+    background: #eeeeee !important;
+    border: 1px solid #999999 !important;
+    color: #000000 !important;
+    font-size: 11px !important;
+    padding: 2px 4px !important;
+    margin: 0 0 6px 0 !important;
+}
+
+.top-nav a,
+.sub-nav a,
+.nav-bar a {
+    font-size: 11px !important;
+    padding: 0 2px !important;
+}
+
+.top-nav ul li,
+.sub-nav ul li {
+    display: inline;
+}
+
+/* The stock javadoc has a search field; old documentation did not. */
+.nav-list-search,
+#search-input,
+.search-tag,
+.search-input {
+    display: none !important;
+}
+
+.nav-list {
+    background: #f4f4f4 !important;
+    border-right: 1px solid #bbbbbb !important;
+    font-size: 11px !important;
+    padding: 6px !important;
+}
+
+.nav-list a {
+    font-size: 11px !important;
+    display: inline !important;
+    padding: 0 !important;
+}
+
+.nav-list ul {
+    margin: 2px 0 8px 0 !important;
+    padding-left: 12px !important;
+}
+
+.nav-list h2,
+.nav-list h3 {
+    font-size: 11px !important;
+    border: 0 !important;
+    margin: 4px 0 2px 0 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---- tables: bordered cells, grey headings -------------------------------------------------- */
+
+table {
+    border-collapse: collapse !important;
+    border: 1px solid #999999 !important;
+    margin: 6px 0 10px 0 !important;
+    font-size: 12px !important;
+}
+
+table caption,
+.caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px 0 2px 0;
+}
+
+th,
+td,
+.table-header,
+.col-first,
+.col-second,
+.col-last,
+.col-constructor-name,
+.col-summary-item {
+    border: 1px solid #bbbbbb !important;
+    padding: 3px 5px !important;
+    vertical-align: top !important;
+    font-size: 12px !important;
+}
+
+th,
+.table-header,
+.col-first:first-child,
+thead td,
+thead th {
+    background: #eeeeee !important;
+    text-align: left !important;
+    font-weight: bold !important;
+}
+
+/* javadoc's striped summary rows: keep them, but very faintly. */
+.odd-row-color {
+    background: #ffffff !important;
+}
+
+.even-row-color {
+    background: #f7f7f7 !important;
+}
+
+/* ---- member detail blocks ------------------------------------------------------------------- */
+
+.member-signature,
+.type-signature,
+pre.member-signature {
+    background: #f7f7f7 !important;
+    border: 1px solid #cccccc !important;
+    padding: 4px 6px !important;
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 12px !important;
+    white-space: pre-wrap;
+}
+
+.member-signature .element-name,
+.element-name {
+    font-family: "Courier New", Courier, monospace !important;
+    font-weight: bold !important;
+}
+
+code,
+kbd,
+samp,
+pre,
+tt {
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 12px !important;
+}
+
+pre {
+    background: #f7f7f7;
+    border: 1px solid #dddddd;
+    padding: 5px 6px;
+    overflow-x: auto;
+}
+
+.inheritance,
+.permits,
+.implements {
+    font-size: 12px !important;
+}
+
+.notes,
+dl.notes {
+    border-top: 1px dotted #999999;
+    padding-top: 4px;
+    font-size: 12px !important;
+}
+
+dl.notes dt {
+    font-weight: bold;
+}
+
+dl.notes dd {
+    margin: 0 0 4px 24px;
+}
+
+.deprecated-label,
+strong.deprecated,
+.deprecation-comment {
+    color: #990000 !important;
+}
+
+/* Section headings inside class pages ("Field Summary", "Method Detail", ...). */
+section h2,
+section h3,
+.detail h2,
+.summary h2 {
+    background: #eeeeee;
+    border: 1px solid #999999;
+    padding: 2px 5px;
+    margin-top: 18px;
+}
+
+/* ---- footer ---------------------------------------------------------------------------------- */
+
+.bottom,
+.footer,
+#footer {
+    font-size: 11px !important;
+    color: #333333 !important;
+    border-top: 1px solid #999999;
+    margin-top: 14px;
+    padding-top: 4px;
+}
+
+/* ---- the front page masthead ---------------------------------------------------------------- */
+
+.masthead {
+    border: 1px solid #999999;
+    background: #eeeeee;
+    padding: 6px 8px;
+    margin: 0 0 10px 0;
+    overflow: hidden;
+}
+
+.masthead .title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin: 0 !important;
+    border: 0 !important;
+}
+
+/* The front page carries its own masthead, so the generated title line would repeat it. */
+body.package-index-page .header {
+    display: none;
+}
+
+.masthead .sub {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.masthead .stamp {
+    float: right;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    text-align: right;
+    color: #333333;
+    border-left: 1px dotted #999999;
+    padding: 0 0 0 8px;
+    margin-left: 10px;
+}
+
+.site-foot {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    color: #333333;
+}
+
+/* Keep the page white even if the reader's system asks for dark mode. */
+@media (prefers-color-scheme: dark) {
+    html,
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+}
