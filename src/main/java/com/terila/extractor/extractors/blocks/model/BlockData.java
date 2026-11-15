@@ -34,9 +34,21 @@ import java.util.List;
  * @param canOcclude          whether the default state hides the faces of neighbouring blocks.
  * @param lightPermeable      whether light passes through the default state.
  * @param air                 whether this is an air block.
- * @param liquid              whether the default state carries a fluid.
+ * @param liquid              whether the block itself is a liquid ({@code LiquidBlock}), i.e. water or
+ *                            lava. This is not the same as carrying a fluid: corals and kelp are
+ *                            permanently underwater but are not liquids.
  * @param requiresCorrectTool whether the correct tool is required for drops.
  * @param randomlyTicking     whether the block is marked as randomly ticking.
+ * @param replaceable         {@code BlockState#canBeReplaced()}: whether another block may be placed
+ *                            into this one without breaking it (grass, snow, vines, fire).
+ * @param hasBlockEntity      whether some block entity type accepts the default state.
+ * @param fluidType           identifier of the fluid the default state carries ({@code minecraft:water}),
+ *                            {@code null} when it carries none. Corals and kelp are permanently
+ *                            underwater, so they carry water without being liquids.
+ * @param waterlogged         whether the fluid comes from a {@code waterlogged} property, i.e. the block
+ *                            is waterloggable and currently holds water.
+ * @param igniteOdds          the game's own ignition chance for the state.
+ * @param burnOdds            the game's own burn (spread) chance for the state.
  * @param harvestTools        tool classes from {@code minecraft:mineable/*} tags.
  * @param states              every possible state.
  * @param properties          every declared property.
@@ -65,6 +77,12 @@ public record BlockData(
         boolean liquid,
         boolean requiresCorrectTool,
         boolean randomlyTicking,
+        boolean replaceable,
+        boolean hasBlockEntity,
+        String fluidType,
+        boolean waterlogged,
+        int igniteOdds,
+        int burnOdds,
         List<String> harvestTools,
         List<BlockStateData> states,
         List<BlockPropertyData> properties,
@@ -72,6 +90,15 @@ public record BlockData(
         int minStateId,
         int maxStateId
 ) {
+
+    /**
+     * Whether the default state carries a fluid at all.
+     *
+     * @return {@code true} when {@link #fluidType()} names a fluid; this is the {@code has_fluid} flag.
+     */
+    public boolean hasFluid() {
+        return fluidType != null;
+    }
 
     /**
      * @param includeStates whether the state list and its id range are included; the blockstate
@@ -108,6 +135,15 @@ public record BlockData(
         json.addProperty("is_liquid", liquid);
         json.addProperty("requires_correct_tool", requiresCorrectTool);
         json.addProperty("randomly_ticking", randomlyTicking);
+        json.addProperty("replaceable", replaceable);
+        json.addProperty("has_block_entity", hasBlockEntity);
+        json.addProperty("has_fluid", fluidType != null);
+        if (fluidType != null) {
+            json.addProperty("fluid", fluidType);
+        }
+        json.addProperty("waterlogged", waterlogged);
+        json.addProperty("ignite_odds", igniteOdds);
+        json.addProperty("burn_odds", burnOdds);
 
         JsonArray tools = new JsonArray();
         harvestTools.forEach(tools::add);

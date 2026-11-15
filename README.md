@@ -315,7 +315,7 @@ produces `en_us` plus the manifest, and says so.
 
 ## Verification
 
-The test suite (242 tests) re-runs the full wire pipeline once and runs a separate raw/both fixture;
+The test suite (254 tests) re-runs the full wire pipeline once and runs a separate raw/both fixture;
 it checks the result six ways: every
 document against its schema, every count against the live game (block state ids, recipes, templates,
 packets), every item's component map against the data generator's own per-item report, every

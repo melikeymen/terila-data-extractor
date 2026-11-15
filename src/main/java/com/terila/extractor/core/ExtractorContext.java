@@ -46,6 +46,15 @@ public final class ExtractorContext {
     private final Path reportsRoot;
     private final ReportReader reports;
     private final ResourceManager resources;
+    /**
+     * Timestamp every document of this run reports.
+     *
+     * <p>It is captured once, before extraction starts, rather than per document: extractors run in
+     * dependency levels and in parallel, so asking the clock at write time made the documents of one
+     * run disagree by up to a few seconds and made two runs of the same data impossible to compare.
+     */
+    private final Instant generatedAt;
+
     private final Map<Class<?>, Object> cache = new ConcurrentHashMap<>();
 
     /** Slow-path guard for {@link #shared}; only ever contended on a cache miss. */
@@ -69,6 +78,7 @@ public final class ExtractorContext {
         this.reportsRoot = builder.reportsRoot;
         this.reports = builder.reportsRoot != null ? ReportReader.of(builder.reportsRoot) : null;
         this.resources = builder.resources;
+        this.generatedAt = builder.generatedAt != null ? builder.generatedAt : Instant.now();
     }
 
     /** The run's configuration (thread count, precision, enabled categories). */
@@ -285,7 +295,7 @@ public final class ExtractorContext {
         meta.addProperty("protocol_version", ExtractorVersion.PROTOCOL_VERSION);
         meta.addProperty("data_pack_version", ExtractorVersion.DATA_PACK_VERSION);
         meta.addProperty("world_version", ExtractorVersion.WORLD_VERSION);
-        meta.addProperty("generated_at", Instant.now().toString());
+        meta.addProperty("generated_at", generatedAt.toString());
         meta.addProperty("source", "minecraft:vanilla");
         meta.addProperty("extractor_name", extractorName);
         meta.addProperty("entry_count", entryCount);
@@ -316,6 +326,18 @@ public final class ExtractorContext {
         private Path languagesDir;
         private Path reportsRoot;
         private ResourceManager resources;
+        private Instant generatedAt;
+
+        /**
+         * Timestamp recorded by every document of the run.
+         *
+         * <p>Supplied by the runner so all documents agree; a manually built context falls back to the
+         * moment it was built.
+         */
+        public Builder generatedAt(Instant generatedAt) {
+            this.generatedAt = generatedAt;
+            return this;
+        }
 
         /** Uses the supplied run configuration and, later, its output writer. */
         public Builder config(ExtractorConfig config) {

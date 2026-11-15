@@ -12,6 +12,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -25,6 +28,7 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -99,6 +103,112 @@ class BlockExtractorTest {
         assertTrue(catalog.get("minecraft:air").air(), "minecraft:air must be flagged as air");
         assertTrue(catalog.get("minecraft:water").liquid(), "water must be flagged as a liquid");
         assertFalse(catalog.get("minecraft:stone").liquid());
+    }
+
+    /**
+     * Only the block registry's two liquids are liquids.
+     *
+     * <p>The flag used to be derived from {@code getFluidState().isEmpty()}, which also flagged every
+     * block the game models as permanently underwater. Carrying a fluid and being a liquid are two
+     * different facts and now have two different fields.
+     */
+    @Test
+    void flagsOnlyLiquidBlocksAsLiquid() {
+        List<String> liquids = built.blocks().stream().filter(BlockData::liquid)
+                .map(BlockData::id).toList();
+        assertEquals(List.of("minecraft:lava", "minecraft:water"), liquids,
+                "the only liquid blocks are water and lava; flowing_* are fluid states, not blocks");
+
+        BlockData conduit = catalog.get("minecraft:conduit");
+        assertFalse(conduit.liquid(), "a conduit is not a liquid block");
+        assertTrue(conduit.hasFluid(), "a conduit still carries water");
+        assertEquals("minecraft:water", conduit.fluidType());
+
+        BlockData coral = catalog.get("minecraft:brain_coral");
+        assertFalse(coral.liquid(), "coral is not a liquid block");
+        assertEquals("minecraft:water", coral.fluidType());
+
+        BlockData kelp = catalog.get("minecraft:kelp_plant");
+        assertFalse(kelp.liquid());
+        assertEquals("minecraft:water", kelp.fluidType());
+
+        BlockData stone = catalog.get("minecraft:stone");
+        assertFalse(stone.hasFluid());
+        assertNull(stone.fluidType(), "a block without a fluid must not name one");
+    }
+
+    /** The new flags have to stay mutually consistent for every block, not just the sampled ones. */
+    @Test
+    void fluidFlagsAreConsistentForEveryBlock() {
+        for (BlockData block : built.blocks()) {
+            assertEquals(block.fluidType() != null, block.hasFluid(),
+                    block.id() + ": has_fluid and fluid disagree");
+            if (block.waterlogged()) {
+                assertTrue(block.hasFluid(), block.id() + " is waterlogged without a fluid");
+            }
+            if (block.liquid()) {
+                assertTrue(block.hasFluid(), block.id() + " is a liquid block without a fluid state");
+            }
+            assertTrue(block.igniteOdds() >= 0, block.id() + " has negative ignition odds");
+            assertTrue(block.burnOdds() >= 0, block.id() + " has negative burn odds");
+        }
+    }
+
+    /** Replaceability is the game's own answer, and it is what grass and vines need. */
+    @Test
+    void recordsReplaceability() {
+        assertTrue(catalog.get("minecraft:short_grass").replaceable(),
+                "grass can be built over without breaking it");
+        assertTrue(catalog.get("minecraft:vine").replaceable());
+        assertFalse(catalog.get("minecraft:stone").replaceable());
+        assertFalse(catalog.get("minecraft:grass_block").replaceable());
+    }
+
+    /** The presence of a block entity is answered by the same predicate the mapping document uses. */
+    @Test
+    void recordsBlockEntityPresence() {
+        assertTrue(catalog.get("minecraft:chest").hasBlockEntity());
+        assertTrue(catalog.get("minecraft:furnace").hasBlockEntity());
+        assertFalse(catalog.get("minecraft:stone").hasBlockEntity());
+
+        Block chest = BuiltInRegistries.BLOCK.getValue(Identifier.parse("minecraft:chest"));
+        boolean accepted = false;
+        for (BlockEntityType<?> type : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
+            accepted |= type.isValid(chest.defaultBlockState());
+        }
+        assertEquals(accepted, catalog.get("minecraft:chest").hasBlockEntity());
+    }
+
+    /** Fire odds come from the live fire block rather than from a copied table. */
+    @Test
+    void recordsTheGamesFireOdds() {
+        BlockData planks = catalog.get("minecraft:oak_planks");
+        assertTrue(planks.igniteOdds() > 0, "oak planks catch fire: " + planks.igniteOdds());
+        assertTrue(planks.burnOdds() > 0, "oak planks spread fire: " + planks.burnOdds());
+
+        BlockData stone = catalog.get("minecraft:stone");
+        assertEquals(0, stone.igniteOdds(), "stone does not burn");
+        assertEquals(0, stone.burnOdds());
+    }
+
+    /** Waterlogging is the fluid that comes from a property, not from the block being submerged. */
+    @Test
+    void recordsWaterloggedDefaultStates() {
+        assertFalse(catalog.get("minecraft:oak_slab").waterlogged(),
+                "a slab is dry in its default state");
+        assertFalse(catalog.get("minecraft:stone").waterlogged(),
+                "stone has no waterlogged property at all");
+
+        long waterlogged = built.blocks().stream().filter(BlockData::waterlogged).count();
+        assertTrue(waterlogged > 0, "some waterloggable blocks default to holding water");
+
+        for (BlockData block : built.blocks()) {
+            BlockState state = BuiltInRegistries.BLOCK
+                    .getValue(Identifier.parse(block.id())).defaultBlockState();
+            boolean expected = state.hasProperty(BlockStateProperties.WATERLOGGED)
+                    && state.getValue(BlockStateProperties.WATERLOGGED);
+            assertEquals(expected, block.waterlogged(), block.id() + ": waterlogged disagrees with the game");
+        }
     }
 
     /** The render flags replace the deprecated {@code isSolid} and have to be self-consistent. */

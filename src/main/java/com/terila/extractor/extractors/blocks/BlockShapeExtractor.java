@@ -24,10 +24,16 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Writes {@code blocks/shapes.json}: collision geometry as axis-aligned boxes.
+ * Writes {@code blocks/shapes.json}: collision and outline geometry as axis-aligned boxes.
  *
- * <p>For every block the default state's geometry plus every distinct geometry reachable from its
- * states is emitted, so the engine can cache shapes by identity.
+ * <p>For every block every distinct geometry reachable from its states is emitted, so the engine can
+ * cache shapes by identity. Collision and outline are recorded separately because they are different
+ * questions: a button has no collision box but does have an outline, and a slab's outline is taller
+ * than its collision box when it is a bottom slab in a double-block position.
+ *
+ * <p>Shapes are evaluated against an empty world, which makes them a property of the state alone.
+ * Shapes that depend on neighbours (a fence's connections, a wall's sides) are therefore reported in
+ * their unconnected form.
  */
 public final class BlockShapeExtractor extends AbstractExtractor {
 
@@ -50,26 +56,31 @@ public final class BlockShapeExtractor extends AbstractExtractor {
             try {
                 Map<String, BlockShapeData> distinct = new LinkedHashMap<>();
                 JsonArray stateKeys = new JsonArray();
+                Map<String, BlockShapeData> outlineDistinct = new LinkedHashMap<>();
+                JsonArray outlineKeys = new JsonArray();
                 for (BlockState state : block.getStateDefinition().getPossibleStates()) {
                     BlockShapeData shape = describe(
                             state.getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
                     String key = key(shape);
                     distinct.putIfAbsent(key, shape);
                     stateKeys.add(key);
-                }
 
-                JsonArray shapes = new JsonArray();
-                for (Map.Entry<String, BlockShapeData> shapeEntry : distinct.entrySet()) {
-                    JsonObject shapeJson = shapeEntry.getValue().toJson();
-                    shapeJson.addProperty("key", shapeEntry.getKey());
-                    shapes.add(shapeJson);
+                    BlockShapeData outline = describe(
+                            state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
+                    String outlineKey = key(outline);
+                    outlineDistinct.putIfAbsent(outlineKey, outline);
+                    outlineKeys.add(outlineKey);
                 }
 
                 JsonObject blockJson = new JsonObject();
-                blockJson.add("distinct_shapes", shapes);
+                blockJson.add("distinct_shapes", shapes(distinct));
                 blockJson.add("state_shape_keys", stateKeys);
                 blockJson.addProperty("default_shape_key", key(describe(block.defaultBlockState()
                         .getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO))));
+                blockJson.add("distinct_outline_shapes", shapes(outlineDistinct));
+                blockJson.add("state_outline_keys", outlineKeys);
+                blockJson.addProperty("default_outline_key", key(describe(block.defaultBlockState()
+                        .getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO))));
                 blocks.add(id, blockJson);
                 entries++;
             } catch (RuntimeException failure) {
@@ -81,6 +92,22 @@ public final class BlockShapeExtractor extends AbstractExtractor {
         root.add("blocks", blocks);
         write(context, root);
         return entries;
+    }
+
+    /**
+     * Renders a distinct-shape map as the JSON array {@code shapes.json} stores.
+     *
+     * @param distinctShapes by canonical key, in first-seen order.
+     * @return one JSON object per distinct geometry, each carrying its key.
+     */
+    private static JsonArray shapes(Map<String, BlockShapeData> distinctShapes) {
+        JsonArray array = new JsonArray();
+        for (Map.Entry<String, BlockShapeData> entry : distinctShapes.entrySet()) {
+            JsonObject json = entry.getValue().toJson();
+            json.addProperty("key", entry.getKey());
+            array.add(json);
+        }
+        return array;
     }
 
     /**

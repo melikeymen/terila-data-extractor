@@ -8,6 +8,7 @@ import com.terila.extractor.util.TimeUtil;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -46,6 +47,9 @@ public final class ExtractionRunner {
                                        ExtractorContext.Builder contextBuilder) throws IOException {
         ExtractorLogger.setVerbose(config.verbose());
         ExtractorLogger log = ExtractorLogger.scoped("TerilaExtractor");
+        // One timestamp for the whole run: the documents of a run must agree on when it happened,
+        // and an extractor's own write time depends on which dependency level it ran in.
+        Instant generatedAt = Instant.now();
         ErrorCollector errors = new ErrorCollector(config.maxIssues());
 
         Path finalOutput = config.outputDirectory().toAbsolutePath().normalize();
@@ -71,6 +75,7 @@ public final class ExtractionRunner {
                     .writer(writer)
                     .log(log)
                     .errors(errors)
+                    .generatedAt(generatedAt)
                     .build();
 
             List<DataExtractor> extractors = registry.enabled(config);
@@ -81,7 +86,7 @@ public final class ExtractionRunner {
 
             OutputValidator.Summary validation = validateOutput(config, writer, errors, log);
 
-            writeRunMetadata(writer, report, errors, validation);
+            writeRunMetadata(writer, report, errors, validation, generatedAt);
 
             if (transaction != null) {
                 transaction.commit();
@@ -120,10 +125,10 @@ public final class ExtractionRunner {
     }
 
     private static void writeRunMetadata(JsonWriter writer, ExtractionReport report,
-                                         ErrorCollector errors, OutputValidator.Summary validation)
-            throws IOException {
+                                         ErrorCollector errors, OutputValidator.Summary validation,
+                                         Instant generatedAt) throws IOException {
         JsonObject meta = report.toJson();
-        meta.addProperty("generated_at", TimeUtil.format(report.finishedAt()));
+        meta.addProperty("generated_at", TimeUtil.format(generatedAt));
 
         JsonObject changelog = new JsonObject();
         changelog.addProperty("generator", "terila-extractor");
@@ -145,13 +150,15 @@ public final class ExtractionRunner {
         writer.write(OutputDirectoryManager.ERRORS_FILE,
                 errors.toJson(report.totalEntries(), report.totalEntries() - errors.errorCount()));
 
-        writer.write(VALIDATION_FILE, validationDocument(report, validation));
+        writer.write(VALIDATION_FILE, validationDocument(report, validation, generatedAt));
     }
 
     /** The standalone validation report: what was checked and what the pass found. */
-    private static JsonObject validationDocument(ExtractionReport report, OutputValidator.Summary validation) {
+    private static JsonObject validationDocument(ExtractionReport report,
+                                                 OutputValidator.Summary validation,
+                                                 Instant generatedAt) {
         JsonObject document = new JsonObject();
-        document.add("_meta", metaOf(report, "validation"));
+        document.add("_meta", metaOf(report, "validation", generatedAt));
         document.addProperty("performed", validation != null);
         if (validation != null) {
             document.add("summary", validation.toJson());
@@ -186,14 +193,14 @@ public final class ExtractionRunner {
     }
 
     /** Metadata block for a run-level document, matching what extractors attach to their own. */
-    private static JsonObject metaOf(ExtractionReport report, String name) {
+    private static JsonObject metaOf(ExtractionReport report, String name, Instant generatedAt) {
         JsonObject meta = new JsonObject();
         meta.addProperty("extractor_version", ExtractorVersion.VERSION);
         meta.addProperty("minecraft_version", ExtractorVersion.MINECRAFT_VERSION);
         meta.addProperty("protocol_version", ExtractorVersion.PROTOCOL_VERSION);
         meta.addProperty("data_pack_version", ExtractorVersion.DATA_PACK_VERSION);
         meta.addProperty("world_version", ExtractorVersion.WORLD_VERSION);
-        meta.addProperty("generated_at", java.time.Instant.now().toString());
+        meta.addProperty("generated_at", generatedAt.toString());
         meta.addProperty("source", "minecraft:vanilla");
         meta.addProperty("extractor_name", "run:" + name);
         meta.addProperty("entry_count", report.totalEntries());
