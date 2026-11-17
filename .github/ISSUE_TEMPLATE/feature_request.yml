@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose a new data category, a new Minecraft version or a tooling change
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What can you not do today, and who runs into it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: >
+        What should the extractor, the output or the tooling do? If a document shape is involved,
+        sketch the JSON or NBT layout.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - New data category
+        - New Minecraft version
+        - Existing document shape
+        - NBT / wire format
+        - Build, tests or tooling
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Anything you tried, or existing data sets that already cover part of this.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, upstream reports or sample data that help judge the request.
+    validations:
+      required: false

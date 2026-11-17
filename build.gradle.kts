@@ -472,6 +472,25 @@ tasks.register("extractAll") {
     dependsOn("runDataGenerator", "downloadLanguages", "runExtractor")
 }
 
+// ---------------------------------------------------------------------------------------------
+// Repository tooling: the generated output catalog and the versioned git hooks
+// ---------------------------------------------------------------------------------------------
+
+/*
+ * `gradle/output-catalog.gradle` provides two tasks:
+ *
+ *   ./gradlew generateOutputCatalog   rebuilds OUTPUT_CATALOG.md from build/extractor_output
+ *   ./gradlew installGitHooks         installs .githooks into this checkout
+ *
+ * The catalog is checked in but never hand-written, and the pre-commit hook regenerates and stages
+ * it, so extracted data and its catalog always travel in the same commit.
+ */
+apply(from = "gradle/output-catalog.gradle")
+
+tasks.named("build") {
+    dependsOn("installGitHooks")
+}
+
 tasks.register("versions") {
     group = "terila"
     description = "Prints the Minecraft / protocol versions this extractor targets."

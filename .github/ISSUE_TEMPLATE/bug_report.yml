@@ -1,0 +1,70 @@
+name: Bug report
+description: Something in the extractor, the output or the tooling is wrong
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do not attach Mojang jars, data packs or language files, and
+        do not paste tokens or `.env` contents. Security problems belong in a private report; see
+        SECURITY.md.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you run, and what went wrong?
+      placeholder: |
+        ./gradlew runExtractor
+        ...the run failed with...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What should have happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: The smallest sequence that shows the problem, including any `--args` flags.
+      placeholder: |
+        1. ./gradlew extractAll
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant output
+      description: >
+        The failing task's output, plus the matching entries from
+        `build/extractor_output/_errors.json` or `_validation.json` when the problem is in a
+        document.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Paste the output of `./gradlew versions`, and tell us your OS and JDK.
+      placeholder: |
+        OS: Windows 11 / macOS 15 / Ubuntu 24.04
+        JDK: 25 (Temurin)
+        ./gradlew versions output: ...
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues for the same problem.
+          required: true
+        - label: This report contains no Mojang binaries, tokens or personal data.
+          required: true

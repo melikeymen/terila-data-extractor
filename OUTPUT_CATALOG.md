@@ -1,112 +1,139 @@
-# Terila Data Extractor — Çıktı Kataloğu
+# Terila Data Extractor — Output Catalog
 
-> Bu dosya, `build/extractor_output` altındaki **gerçek çalıştırma çıktısından** üretilmiştir.
-> Rapor tarihi: **2026-11-06 18:14** · Çalıştırma zamanı: **2026-11-06T15:13:11Z**
+> Generated from the real extraction output under `build/extractor_output` by `./gradlew generateOutputCatalog`.
+> Last extraction: **2026-11-15 21:55:39 UTC** · run time **44.2 s** · extractor **1.0.0**
 >
-> Hedef: **Minecraft 26.3** · Protokol **777** · Data pack **121.0** · World version **5023**
+> Target: **Minecraft 26.3** · protocol **777** · data pack **121.0** · world version **5023**
 
-## Kısa özet
+> This file is generated; do not edit it by hand. The pre-commit hook rebuilds it from the output before every commit, so a change to the extracted data and the catalog that describes it land in the same commit. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-| Ölçü | Değer |
-|---|---:|
-| Başarılı extractor | 119 / 119 |
-| Raporlanan entry | 58,119 |
-| Çıktı dosyası | 10,713 |
-| JSON dosyası | 10,552 |
-| NBT dosyası | 160 |
-| NBT registry | 155 |
-| Paket yapısı | 235 |
-| Paket alanı | 592 |
-| Toplam çıktı boyutu | 228.2 MiB |
-| Şema doğrulaması | 3,220 / 3,220 |
-| Şema sayısı | 50 |
-| Hata / uyarı | 0 / 0 |
-| Test | 242 |
-| Test hatası | 0 |
-| Test skip | 2 |
+## Summary
 
-**Kapsam notu:** `tags/by_entry.json` ayrı bir yan çıktıdır; `_meta.total_entries` sayacına eklenmez. Bu dosya **3,482** tag'li kayıt ve **20,156** tag üyeliği taşır. `gameplay/game_rules.json` **59** kural, `gameplay/potions.json` **46** potion ve **45** effect içerir. `packets/structures.json` **260** packet occurrence'ını **235** yapıda, **234** sınıf ve **592** alanla açıklar; `codec_missing_count` **1** ve `unresolved_count` **0**. Feature flag **4**, known pack **1**, block entity eşlemesi **191**.
+| Measure | Value |
+| --- | ---: |
+| Successful extractors | 119 / 119 |
+| Reported entries | 58,119 |
+| Output files | 10,713 |
+| JSON documents | 10,552 |
+| NBT payloads | 160 |
+| NBT registries | 155 |
+| Packet structures | 235 |
+| Packet fields | 592 |
+| Total output size | 239.0 MiB |
+| Schema validation | 3,220 / 3,220 |
+| Schema definitions | 50 |
+| Errors / warnings | 0 / 0 |
 
-## Veri kataloğu
+**Coverage note:** `tags/by_entry.json` is a separate side output and is not added to the `_meta.total_entries` counter; it holds **3,482** tagged entries and **20,156** tag memberships. `gameplay/` documents **59** rules and **46** potions with **45** effects. `packets/structures.json` explains **260** packet occurrences as **235** structures, **234** classes and **592** fields; **260** of **260** payloads carry a resolved codec, **1** has none and **0** is unresolved. The handshake surface covers **4** feature flags and **1** known packs. The block entity mapping covers **191** blocks with **49** block entity types.
 
-| Klasör | Dosya | Boyut | İçerik |
-|---|---|---|---|
-| `(root)` | 3 | 39.5 KiB | Çalıştırma özeti, hata/uyarı günlüğü ve şema doğrulama raporu. |
-| `advancements/` | 2 | 2.7 MiB | Tüm advancement tanımları; JSON kataloğu ve counted id+NBT wire stream. |
-| `assets/` | 7,331 | 6.1 MiB | Client jar resource pack aynası; JSON assetler, index ve binary manifest. |
-| `blocks/` | 1,293 | 30.3 MiB | Blok kataloğu, özellikler, materyaller, sesler, şekiller, state ID tablosu, blok başına state dosyaları ve block entity eşlemesi. |
-| `commands/` | 3 | 2.0 MiB | Canlı komut ağacı JSON'u, oyunun komut raporu ve çerçevelenmiş NBT. |
-| `damage_types/` | 1 | 11.3 KiB | Damage type tanımları. |
-| `enchantments/` | 2 | 69.6 KiB | Enchantment tanımları ve effect bileşenleri. |
-| `entities/` | 4 | 74.7 KiB | Entity kataloğu, attribute tablosu, metadata türleri ve pose listesi. |
-| `functions/` | 1 | 982 B | Vanilla fonksiyon kaynakları; 26.3 vanilla boş olduğu için açıklamalı boş belge. |
-| `gameplay/` | 2 | 35.5 KiB | Oyun kuralları ve potion/effect katalogları. |
-| `item_modifiers/` | 1 | 2.8 KiB | Item modifier tanımları; vanilla boş olduğu için açıklamalı boş belge. |
-| `items/` | 6 | 4.7 MiB | Item kataloğu, component haritaları, yemek, araç ve enchantability belgeleri. |
-| `loot/` | 3 | 2.1 MiB | Loot tabloları, blok bazlı loot indeksi ve counted id+NBT wire stream. |
-| `misc/` | 51 | 330.3 KiB | Geri kalan registry türleri, varyantlar, dialog, stat/command argument/position source ve tip sözlükleri. |
-| `packets/` | 2 | 510.7 KiB | Her bağlantı durumu ve yönü için paket ID tablosu ve paket payload yapıları. |
-| `predicates/` | 1 | 4.9 KiB | Predicate tanımları. |
-| `protocol/` | 4 | 46.9 KiB | Sürüm/protokol özeti, feature flag'ler, known packs ve JSON-RPC yüzeyi. |
-| `recipes/` | 5 | 2.3 MiB | Tüm recipe tanımları, tip grupları ve counted id+NBT wire stream. |
-| `registries/` | 313 | 12.2 MiB | Registry manifesti, 155 registry dump'ı, 155 registry'nin doğrudan registry_data wire payload'ı, rapor ve data pack formatları. |
-| `structures/` | 1,512 | 67.9 MiB | Yapı indeksi ve 1.511 NBT şablonunun çözümlenmiş JSON karşılığı. |
-| `tags/` | 12 | 3.1 MiB | Küratörlü tag belgeleri, tüm registry tag taraması, ters üyelik indeksi ve ham update_tags wire payload'ı. |
-| `translations/` | 146 | 86.7 MiB | Dil tabloları, anahtar envanteri, locale manifesti ve 142 locale belgesi. |
-| `trims/` | 2 | 7.8 KiB | Trim material ve trim pattern tanımları. |
-| `worldgen/` | 13 | 6.9 MiB | Biome, feature, structure, density function ve diğer dünya üretimi belgeleri. |
+## Data catalog
 
-| **Toplam** | **10,713** | **228.2 MiB** | **Tüm çıktı** |
+`(root)` is the output directory itself; every other row is a top-level directory.
 
-### Kapsam detayları
+| Folder | Files | Size | Contents |
+| --- | ---: | ---: | --- |
+| (root) | 3 | 39.5 KiB | Run summary, the error/warning log and the schema validation report. |
+| `advancements/` | 2 | 2.7 MiB | Every advancement definition; JSON catalog plus a counted id + NBT wire stream. |
+| `assets/` | 7,331 | 6.1 MiB | Client jar resource pack mirror; JSON assets, index and the binary manifest. |
+| `blocks/` | 1,293 | 41.1 MiB | Block catalog, properties, materials, sounds, shapes, the state id table, one state document per block and the block entity mapping. |
+| `commands/` | 3 | 2.0 MiB | Live command tree JSON, the game's own command report and the framed NBT tree. |
+| `damage_types/` | 1 | 11.3 KiB | Damage type definitions. |
+| `enchantments/` | 2 | 69.6 KiB | Enchantment definitions and their effect components. |
+| `entities/` | 4 | 74.7 KiB | Entity catalog, attribute table, metadata types and pose list. |
+| `functions/` | 1 | 982 B | Vanilla function sources; 26.3 ships none, so an annotated empty document. |
+| `gameplay/` | 2 | 35.5 KiB | Game rule and potion/effect catalogs. |
+| `item_modifiers/` | 1 | 2.8 KiB | Item modifier definitions; vanilla ships none, so an annotated empty document. |
+| `items/` | 6 | 4.7 MiB | Item catalog, component maps, food, tools and enchantability documents. |
+| `loot/` | 3 | 2.1 MiB | Loot tables, the per-block loot index and a counted id + NBT wire stream. |
+| `misc/` | 51 | 330.3 KiB | Remaining registry kinds, variants, dialogs, and the stat/command argument/position source vocabularies. |
+| `packets/` | 2 | 510.7 KiB | Packet id table per connection state and direction, plus the packet payload structures. |
+| `predicates/` | 1 | 4.9 KiB | Predicate definitions. |
+| `protocol/` | 4 | 46.9 KiB | Version/protocol summary, feature flags, known packs and the JSON-RPC surface. |
+| `recipes/` | 5 | 2.3 MiB | Every recipe definition, its type groups and a counted id + NBT wire stream. |
+| `registries/` | 313 | 12.2 MiB | Registry manifest, one dump per registry, each registry's direct registry_data wire payload, the game report and the data pack formats. |
+| `structures/` | 1,512 | 67.9 MiB | Structure index and the resolved JSON of every NBT template. |
+| `tags/` | 12 | 3.1 MiB | Curated tag documents, the all-registry tag sweep, the inverse membership index and the raw update_tags wire payload. |
+| `translations/` | 146 | 86.7 MiB | Language tables, the key inventory, the locale manifest and one document per locale. |
+| `trims/` | 2 | 7.8 KiB | Trim material and trim pattern definitions. |
+| `worldgen/` | 13 | 6.9 MiB | Biome, feature, structure, density function and other world generation documents. |
+| **Total** | **10,713** | **239.0 MiB** | **All output** |
 
-- **Bloklar:** 1.286 blok; 1.286 ayrı blockstate belgesi; tüm state ID'leri ve state aralıkları.
-- **Item'lar:** 1.658 item; component haritaları, component default'ları ve oyun raporu karşılaştırması.
-- **Registry'ler:** 155 registry; registry dump'larındaki entry toplamı **14,436**.
-- **Yapılar:** 1.511 şablon; çoklu palette'ler, blok pozisyonları, block entity'ler ve entity'ler korunuyor.
-- **Tag'ler:** 20 registry grubu; 3,482 kayıt; 20,156 üyelik.
-- **Çeviriler:** 142 locale; `en_us` dahil tam anahtar tablosu ve locale manifesti.
-- **Asset'ler:** 7.331 dosya; JSON asset'ler aynalanıyor, binary asset'ler boyut ve SHA-256 ile manifestte listeleniyor.
-- **Paketler:** 260 occurrence, 235 yapı, 234 sınıf ve 592 alan. `bundle_delimiter` payload'sız bir birim paketidir; diğer tüm paketlerin codec'i çözümlendi.
-- **NBT:** 160 NBT dosyası (6,230,224 byte) sıkıştırmasız ve sarmalamasız yazıldı. 155 registry doğrudan `registry_data` payload'ıdır; 60 datapack registry'si entry NBT'si taşır, builtin'lerde yalnızca `has_nbt=0` ve kimlik vardır. `tags/all.nbt` doğrudan `update_tags`, `recipes/`, `loot/` ve `advancements/` altındaki `.nbt` dosyaları counted `id + NBT` akışıdır. `commands/tree.nbt` VarInt uzunluk çerçeveli tek command-tree NBT'sidir. Tüm payload'lar oyun codec'lerinden `NbtOps` ile üretilir; JSON dönüşümü kullanılmaz.
-- **Protokol el sıkışma:** 4 feature flag ve 1 known pack (`minecraft:core`) ayrı belgelerde.
+### Coverage details
 
-## Paket yapıları
+- **Blocks:** 1,286 blocks with their properties, materials, sounds and shapes; 35,723 block states with a complete state id table (highest id 35,722).
+- **Items:** 1,658 items with component maps, component defaults, food, tool and enchantability documents; the game's own per-item component report is compared against every map (23,072 assignments over 69 distinct components).
+- **Registries:** 155 registries (60 data pack, 95 built-in); the dumps hold 14,436 entries.
+- **Structures:** 1,511 templates; every palette, block position, block entity and entity is preserved.
+- **Tags:** 20 tag registries, 883 tags and 20,156 resolved values.
+- **Translations:** 143 locales including `en_us`, the full key inventory (1,815 registry keys) and per-locale coverage in the manifest.
+- **Assets:** 11,603 assets in the index; 7,329 JSON assets mirrored under their original paths and 4,274 binary assets listed with size and SHA-256 (3,961 distinct contents).
+- **Packets:** 260 occurrences across 235 structures, 234 classes and 592 fields; 260 payloads resolved, 1 packet without a codec, 0 unresolved.
+- **NBT:** 160 files (6,230,224 bytes) written uncompressed and unframed. 155 of them are direct `registry_data` payloads; 60 data pack registries carry entry NBT, while built-in registries carry `has_nbt=0` and their identity. `tags/all.nbt` is the direct `update_tags` payload, the `.nbt` files under `recipes/`, `loot/` and `advancements/` are counted `id + NBT` streams, and `commands/tree.nbt` is a single VarInt-length-framed command tree. Every payload is produced from the game codecs through `NbtOps`, never through a JSON round trip.
 
-`packets/structures.json`, her paketin bağlantı durumu ve yönünü, protokol ID'sini, uygulama sınıfını, kayıt/alan sırasını ve varsa `STREAM_CODEC` bileşenlerini taşır. Her alan `wire_type` ve `wire_type_source` taşır; mümkün olduğunda alan sırasını ve tipini açıklayan `note` de eklenir. `codec_constant` ve `packet_spec` kaynaklı alanlarda `wire_type` kesin byte formatıdır; kalan özel codec'lerde alan `codec_defined` olarak işaretlenir. `registry_data` ve `update_tags` için alan seviyesinde `string`, `varint_prefixed_list` ve `varint_prefixed_map` tipleri ile payload notları bulunur. `format_note` bu sözleşmeyi belgede de açıklar.
+## Packet structures
 
-| Paket | Yön | Durum:ID | Sınıf | Format | Alan | Alan adları | Serialized by | Codec |
-|---|---|---|---|---|---|---|---|---|
+`packets/structures.json` carries every packet's connection state and direction, protocol id, implementation class, field order and, where one exists, its `STREAM_CODEC` components. Every field records a `wire_type` and a `wire_type_source`, plus a `note` that describes its order and type when one is available. For `codec_constant` and `packet_spec` fields the `wire_type` is the exact byte format; the remaining custom codecs mark the field as `codec_defined`. `registry_data` and `update_tags` also carry payload notes with `string`, `varint_prefixed_list` and `varint_prefixed_map` field types. `format_note` states the same contract in the document itself.
+
+> Record components and declared instance fields describe the Java payload. wire_type is authoritative only when wire_type_source is codec_constant; otherwise the listed custom codec is the source of truth for the byte format.
+
+| Packet | Direction | State:ID | Class | Format | Fields | Field names | Serialized by | Codec |
+| --- | --- | --- | --- | --- | ---: | --- | --- | --- |
+| `minecraft:accept_code_of_conduct` | serverbound | `configuration:9` | `net.minecraft.network.protocol.configuration.ServerboundAcceptCodeOfConductPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
+| `minecraft:accept_teleportation` | serverbound | `play:0` | `net.minecraft.network.protocol.game.ServerboundAcceptTeleportationPacket` | record | 6 | id, x, y, z, yRot, xRot | `STREAM_CODEC` | composite (6) |
 | `minecraft:add_entity` | clientbound | `play:1` | `net.minecraft.network.protocol.game.ClientboundAddEntityPacket` | class | 11 | id, uuid, type, x, y, z, movement, xRot, yRot, yHeadRot, data | `STREAM_CODEC` | custom (0) |
 | `minecraft:add_transient_block` | clientbound | `play:37` | `net.minecraft.network.protocol.game.ClientboundAddTransientBlockPacket` | class | 2 | pos, blockState | `STREAM_CODEC` | custom (0) |
 | `minecraft:animate` | clientbound | `play:2` | `net.minecraft.network.protocol.game.ClientboundAnimatePacket` | class | 2 | id, action | `STREAM_CODEC` | custom (0) |
+| `minecraft:attack` | serverbound | `play:1` | `net.minecraft.network.protocol.game.ServerboundAttackPacket` | record | 1 | entityId | `STREAM_CODEC` | composite (1) |
 | `minecraft:award_stats` | clientbound | `play:3` | `net.minecraft.network.protocol.game.ClientboundAwardStatsPacket` | record | 1 | stats | `STREAM_CODEC` | custom (0) |
 | `minecraft:block_changed_ack` | clientbound | `play:4` | `net.minecraft.network.protocol.game.ClientboundBlockChangedAckPacket` | record | 1 | sequence | `STREAM_CODEC` | custom (0) |
 | `minecraft:block_destruction` | clientbound | `play:5` | `net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket` | class | 3 | id, pos, progress | `STREAM_CODEC` | custom (0) |
 | `minecraft:block_entity_data` | clientbound | `play:6` | `net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket` | class | 3 | pos, type, tag | `STREAM_CODEC` | composite (3) |
+| `minecraft:block_entity_tag_query` | serverbound | `play:2` | `net.minecraft.network.protocol.game.ServerboundBlockEntityTagQueryPacket` | class | 2 | transactionId, pos | `STREAM_CODEC` | custom (0) |
 | `minecraft:block_event` | clientbound | `play:7` | `net.minecraft.network.protocol.game.ClientboundBlockEventPacket` | class | 4 | pos, b0, b1, block | `STREAM_CODEC` | custom (0) |
 | `minecraft:block_update` | clientbound | `play:8` | `net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket` | class | 2 | pos, blockState | `STREAM_CODEC` | composite (2) |
 | `minecraft:boss_event` | clientbound | `play:9` | `net.minecraft.network.protocol.game.ClientboundBossEventPacket` | class | 2 | id, operation | `STREAM_CODEC` | custom (0) |
 | `minecraft:bundle_delimiter` | clientbound | `play:0` | `net.minecraft.network.protocol.game.ClientboundBundleDelimiterPacket` | class | 0 | — | `unknown` | missing (0) |
+| `minecraft:bundle_item_selected` | serverbound | `play:3` | `net.minecraft.network.protocol.game.ServerboundSelectBundleItemPacket` | record | 2 | slotId, selectedItemIndex | `STREAM_CODEC` | custom (0) |
 | `minecraft:change_difficulty` | clientbound | `play:10` | `net.minecraft.network.protocol.game.ClientboundChangeDifficultyPacket` | record | 2 | difficulty, locked | `STREAM_CODEC` | composite (2) |
+| `minecraft:change_difficulty` | serverbound | `play:4` | `net.minecraft.network.protocol.game.ServerboundChangeDifficultyPacket` | record | 1 | difficulty | `STREAM_CODEC` | composite (1) |
+| `minecraft:change_game_mode` | serverbound | `play:5` | `net.minecraft.network.protocol.game.ServerboundChangeGameModePacket` | record | 1 | mode | `STREAM_CODEC` | composite (1) |
+| `minecraft:chat` | serverbound | `play:9` | `net.minecraft.network.protocol.game.ServerboundChatPacket` | record | 5 | message, timeStamp, salt, signature, lastSeenMessages | `STREAM_CODEC` | composite (5) |
+| `minecraft:chat_ack` | serverbound | `play:6` | `net.minecraft.network.protocol.game.ServerboundChatAckPacket` | record | 1 | offset | `STREAM_CODEC` | custom (0) |
+| `minecraft:chat_command` | serverbound | `play:7` | `net.minecraft.network.protocol.game.ServerboundChatCommandPacket` | record | 1 | command | `STREAM_CODEC` | custom (0) |
+| `minecraft:chat_command_signed` | serverbound | `play:8` | `net.minecraft.network.protocol.game.ServerboundChatCommandSignedPacket` | record | 5 | command, timeStamp, salt, argumentSignatures, lastSeenMessages | `STREAM_CODEC` | composite (5) |
+| `minecraft:chat_session_update` | serverbound | `play:10` | `net.minecraft.network.protocol.game.ServerboundChatSessionUpdatePacket` | record | 1 | chatSession | `STREAM_CODEC` | custom (0) |
 | `minecraft:chunk_batch_finished` | clientbound | `play:11` | `net.minecraft.network.protocol.game.ClientboundChunkBatchFinishedPacket` | record | 1 | batchSize | `STREAM_CODEC` | custom (0) |
+| `minecraft:chunk_batch_received` | serverbound | `play:11` | `net.minecraft.network.protocol.game.ServerboundChunkBatchReceivedPacket` | record | 1 | desiredChunksPerTick | `STREAM_CODEC` | custom (0) |
 | `minecraft:chunk_batch_start` | clientbound | `play:12` | `net.minecraft.network.protocol.game.ClientboundChunkBatchStartPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:chunks_biomes` | clientbound | `play:13` | `net.minecraft.network.protocol.game.ClientboundChunksBiomesPacket` | record | 1 | chunkBiomeData | `STREAM_CODEC` | composite (1) |
 | `minecraft:clear_dialog` | clientbound | `configuration:18, play:142` | `net.minecraft.network.protocol.common.ClientboundClearDialogPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:clear_titles` | clientbound | `play:14` | `net.minecraft.network.protocol.game.ClientboundClearTitlesPacket` | class | 1 | resetTimes | `STREAM_CODEC` | custom (0) |
+| `minecraft:client_command` | serverbound | `play:12` | `net.minecraft.network.protocol.game.ServerboundClientCommandPacket` | class | 1 | action | `STREAM_CODEC` | custom (0) |
+| `minecraft:client_information` | serverbound | `configuration:0, play:14` | `net.minecraft.network.protocol.common.ServerboundClientInformationPacket` | record | 1 | information | `STREAM_CODEC` | custom (0) |
+| `minecraft:client_tick_end` | serverbound | `play:13` | `net.minecraft.network.protocol.game.ServerboundClientTickEndPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:code_of_conduct` | clientbound | `configuration:20` | `net.minecraft.network.protocol.configuration.ClientboundCodeOfConductPacket` | record | 1 | codeOfConduct | `STREAM_CODEC` | composite (1) |
+| `minecraft:command_suggestion` | serverbound | `play:15` | `net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket` | record | 2 | id, command | `STREAM_CODEC` | composite (2) |
 | `minecraft:command_suggestions` | clientbound | `play:15` | `net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket` | record | 4 | id, start, length, suggestions | `STREAM_CODEC` | composite (4) |
 | `minecraft:commands` | clientbound | `play:16` | `net.minecraft.network.protocol.game.ClientboundCommandsPacket` | class | 2 | rootIndex, entries | `STREAM_CODEC` | composite (2) |
+| `minecraft:configuration_acknowledged` | serverbound | `play:16` | `net.minecraft.network.protocol.game.ServerboundConfigurationAcknowledgedPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
+| `minecraft:container_button_click` | serverbound | `play:17` | `net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket` | record | 2 | containerId, buttonId | `STREAM_CODEC` | composite (2) |
+| `minecraft:container_click` | serverbound | `play:18` | `net.minecraft.network.protocol.game.ServerboundContainerClickPacket` | record | 7 | containerId, stateId, slotNum, buttonNum, containerInput, changedSlots, carriedItem | `STREAM_CODEC` | composite (7) |
 | `minecraft:container_close` | clientbound | `play:17` | `net.minecraft.network.protocol.game.ClientboundContainerClosePacket` | class | 1 | containerId | `STREAM_CODEC` | custom (0) |
+| `minecraft:container_close` | serverbound | `play:19` | `net.minecraft.network.protocol.game.ServerboundContainerClosePacket` | class | 1 | containerId | `STREAM_CODEC` | custom (0) |
 | `minecraft:container_set_content` | clientbound | `play:18` | `net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket` | record | 4 | containerId, stateId, items, carriedItem | `STREAM_CODEC` | composite (4) |
 | `minecraft:container_set_data` | clientbound | `play:19` | `net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket` | class | 3 | containerId, id, value | `STREAM_CODEC` | custom (0) |
 | `minecraft:container_set_slot` | clientbound | `play:20` | `net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket` | class | 4 | containerId, stateId, slot, itemStack | `STREAM_CODEC` | custom (0) |
+| `minecraft:container_slot_state_changed` | serverbound | `play:20` | `net.minecraft.network.protocol.game.ServerboundContainerSlotStateChangedPacket` | record | 3 | slotId, containerId, newState | `STREAM_CODEC` | custom (0) |
 | `minecraft:cookie_request` | clientbound | `configuration:0, login:5, play:21` | `net.minecraft.network.protocol.cookie.ClientboundCookieRequestPacket` | record | 1 | key | `STREAM_CODEC` | custom (0) |
+| `minecraft:cookie_response` | serverbound | `configuration:1, login:4, play:21` | `net.minecraft.network.protocol.cookie.ServerboundCookieResponsePacket` | record | 2 | key, payload | `STREAM_CODEC` | custom (0) |
 | `minecraft:cooldown` | clientbound | `play:22` | `net.minecraft.network.protocol.game.ClientboundCooldownPacket` | record | 2 | cooldownGroup, duration | `STREAM_CODEC` | composite (2) |
 | `minecraft:custom_chat_completions` | clientbound | `play:23` | `net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket` | record | 2 | action, entries | `STREAM_CODEC` | composite (2) |
+| `minecraft:custom_click_action` | serverbound | `configuration:8, play:68` | `net.minecraft.network.protocol.common.ServerboundCustomClickActionPacket` | record | 2 | id, payload | `STREAM_CODEC` | composite (2) |
 | `minecraft:custom_payload` | clientbound | `configuration:1` | `net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket` | record | 1 | payload | `CONFIG_STREAM_CODEC` | custom (0) |
 | `minecraft:custom_payload` | clientbound | `play:24` | `net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket` | record | 1 | payload | `GAMEPLAY_STREAM_CODEC` | custom (0) |
+| `minecraft:custom_payload` | serverbound | `configuration:2, play:22` | `net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket` | record | 1 | payload | `STREAM_CODEC` | custom (0) |
 | `minecraft:custom_query` | clientbound | `login:4` | `net.minecraft.network.protocol.login.ClientboundCustomQueryPacket` | record | 2 | transactionId, payload | `STREAM_CODEC` | custom (0) |
+| `minecraft:custom_query_answer` | serverbound | `login:2` | `net.minecraft.network.protocol.login.ServerboundCustomQueryAnswerPacket` | record | 2 | transactionId, payload | `STREAM_CODEC` | custom (0) |
 | `minecraft:custom_report_details` | clientbound | `configuration:16, play:139` | `net.minecraft.network.protocol.common.ClientboundCustomReportDetailsPacket` | record | 1 | details | `STREAM_CODEC` | composite (1) |
 | `minecraft:damage_event` | clientbound | `play:25` | `net.minecraft.network.protocol.game.ClientboundDamageEventPacket` | record | 5 | entityId, sourceType, sourceCauseId, sourceDirectId, sourcePosition | `STREAM_CODEC` | custom (0) |
 | `minecraft:debug/block_value` | clientbound | `play:26` | `net.minecraft.network.protocol.game.ClientboundDebugBlockValuePacket` | record | 2 | blockPos, update | `STREAM_CODEC` | composite (2) |
@@ -114,26 +141,38 @@
 | `minecraft:debug/entity_value` | clientbound | `play:28` | `net.minecraft.network.protocol.game.ClientboundDebugEntityValuePacket` | record | 2 | entityId, update | `STREAM_CODEC` | composite (2) |
 | `minecraft:debug/event` | clientbound | `play:29` | `net.minecraft.network.protocol.game.ClientboundDebugEventPacket` | record | 1 | event | `STREAM_CODEC` | composite (1) |
 | `minecraft:debug_sample` | clientbound | `play:30` | `net.minecraft.network.protocol.game.ClientboundDebugSamplePacket` | record | 2 | sample, debugSampleType | `STREAM_CODEC` | custom (0) |
+| `minecraft:debug_subscription_request` | serverbound | `play:23` | `net.minecraft.network.protocol.game.ServerboundDebugSubscriptionRequestPacket` | record | 1 | subscriptions | `STREAM_CODEC` | custom (0) |
 | `minecraft:delete_chat` | clientbound | `play:31` | `net.minecraft.network.protocol.game.ClientboundDeleteChatPacket` | record | 1 | messageSignature | `STREAM_CODEC` | composite (1) |
 | `minecraft:disconnect` | clientbound | `configuration:2, play:32` | `net.minecraft.network.protocol.common.ClientboundDisconnectPacket` | record | 1 | reason | `STREAM_CODEC` | custom (0) |
 | `minecraft:disguised_chat` | clientbound | `play:33` | `net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket` | record | 2 | message, chatType | `STREAM_CODEC` | composite (2) |
+| `minecraft:edit_book` | serverbound | `play:24` | `net.minecraft.network.protocol.game.ServerboundEditBookPacket` | record | 3 | slot, pages, title | `STREAM_CODEC` | composite (3) |
 | `minecraft:entity_event` | clientbound | `play:34` | `net.minecraft.network.protocol.game.ClientboundEntityEventPacket` | class | 2 | entityId, eventId | `STREAM_CODEC` | custom (0) |
 | `minecraft:entity_position_sync` | clientbound | `play:35` | `net.minecraft.network.protocol.game.ClientboundEntityPositionSyncPacket` | record | 5 | id, position, yRot, xRot, onGround | `STREAM_CODEC` | composite (5) |
+| `minecraft:entity_tag_query` | serverbound | `play:25` | `net.minecraft.network.protocol.game.ServerboundEntityTagQueryPacket` | class | 2 | transactionId, entityId | `STREAM_CODEC` | custom (0) |
 | `minecraft:explode` | clientbound | `play:36` | `net.minecraft.network.protocol.game.ClientboundExplodePacket` | record | 8 | center, radius, blockCount, playerKnockback, explosionParticle, explosionSound, blockParticles, playSound | `STREAM_CODEC` | composite (8) |
 | `minecraft:finish_configuration` | clientbound | `configuration:3` | `net.minecraft.network.protocol.configuration.ClientboundFinishConfigurationPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
+| `minecraft:finish_configuration` | serverbound | `configuration:3` | `net.minecraft.network.protocol.configuration.ServerboundFinishConfigurationPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:forget_level_chunk` | clientbound | `play:38` | `net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket` | record | 1 | pos | `STREAM_CODEC` | custom (0) |
 | `minecraft:game_event` | clientbound | `play:39` | `net.minecraft.network.protocol.game.ClientboundGameEventPacket` | class | 2 | event, param | `STREAM_CODEC` | custom (0) |
 | `minecraft:game_rule_values` | clientbound | `play:40` | `net.minecraft.network.protocol.game.ClientboundGameRuleValuesPacket` | record | 1 | values | `STREAM_CODEC` | custom (0) |
 | `minecraft:game_test_highlight_pos` | clientbound | `play:41` | `net.minecraft.network.protocol.game.ClientboundGameTestHighlightPosPacket` | record | 2 | absolutePos, relativePos | `STREAM_CODEC` | composite (2) |
 | `minecraft:hello` | clientbound | `login:1` | `net.minecraft.network.protocol.login.ClientboundHelloPacket` | class | 4 | serverId, publicKey, challenge, shouldAuthenticate | `STREAM_CODEC` | custom (0) |
+| `minecraft:hello` | serverbound | `login:0` | `net.minecraft.network.protocol.login.ServerboundHelloPacket` | record | 2 | name, profileId | `STREAM_CODEC` | custom (0) |
 | `minecraft:hurt_animation` | clientbound | `play:43` | `net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket` | record | 2 | id, yaw | `STREAM_CODEC` | custom (0) |
 | `minecraft:initialize_border` | clientbound | `play:44` | `net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket` | class | 8 | newCenterX, newCenterZ, oldSize, newSize, lerpTime, newAbsoluteMaxSize, warningBlocks, warningTime | `STREAM_CODEC` | custom (0) |
+| `minecraft:intention` | serverbound | `handshake:0` | `net.minecraft.network.protocol.handshake.ClientIntentionPacket` | record | 4 | protocolVersion, hostName, port, intention | `STREAM_CODEC` | custom (0) |
+| `minecraft:interact` | serverbound | `play:26` | `net.minecraft.network.protocol.game.ServerboundInteractPacket` | record | 4 | entityId, hand, location, usingSecondaryAction | `STREAM_CODEC` | composite (4) |
+| `minecraft:jigsaw_generate` | serverbound | `play:27` | `net.minecraft.network.protocol.game.ServerboundJigsawGeneratePacket` | class | 3 | pos, levels, keepJigsaws | `STREAM_CODEC` | custom (0) |
 | `minecraft:keep_alive` | clientbound | `configuration:4, play:45` | `net.minecraft.network.protocol.common.ClientboundKeepAlivePacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
+| `minecraft:keep_alive` | serverbound | `configuration:4, play:28` | `net.minecraft.network.protocol.common.ServerboundKeepAlivePacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
+| `minecraft:key` | serverbound | `login:1` | `net.minecraft.network.protocol.login.ServerboundKeyPacket` | class | 2 | keybytes, encryptedChallenge | `STREAM_CODEC` | custom (0) |
 | `minecraft:level_chunk_with_light` | clientbound | `play:46` | `net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket` | record | 4 | x, z, chunkData, lightData | `STREAM_CODEC` | composite (4) |
 | `minecraft:level_event` | clientbound | `play:47` | `net.minecraft.network.protocol.game.ClientboundLevelEventPacket` | class | 4 | type, pos, data, globalEvent | `STREAM_CODEC` | custom (0) |
 | `minecraft:level_particles` | clientbound | `play:48` | `net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket` | record | 14 | particle, overrideLimiter, alwaysShow, x, y, z, xDist, yDist, zDist, xMaxSpeed, yMaxSpeed, zMaxSpeed, count, randomizationType | `STREAM_CODEC` | composite (14) |
 | `minecraft:light_update` | clientbound | `play:49` | `net.minecraft.network.protocol.game.ClientboundLightUpdatePacket` | record | 3 | x, z, lightData | `STREAM_CODEC` | composite (3) |
+| `minecraft:lock_difficulty` | serverbound | `play:29` | `net.minecraft.network.protocol.game.ServerboundLockDifficultyPacket` | class | 1 | locked | `STREAM_CODEC` | custom (0) |
 | `minecraft:login` | clientbound | `play:50` | `net.minecraft.network.protocol.game.ClientboundLoginPacket` | record | 12 | playerId, hardcore, levels, maxPlayers, chunkRadius, simulationDistance, reducedDebugInfo, showDeathScreen, doLimitedCrafting, commonPlayerSpawnInfo, onlineMode, enforcesSecureChat | `STREAM_CODEC` | composite (12) |
+| `minecraft:login_acknowledged` | serverbound | `login:3` | `net.minecraft.network.protocol.login.ServerboundLoginAcknowledgedPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:login_compression` | clientbound | `login:3` | `net.minecraft.network.protocol.login.ClientboundLoginCompressionPacket` | class | 1 | compressionThreshold | `STREAM_CODEC` | custom (0) |
 | `minecraft:login_disconnect` | clientbound | `login:0` | `net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket` | record | 1 | reason | `STREAM_CODEC` | composite (1) |
 | `minecraft:login_finished` | clientbound | `login:2` | `net.minecraft.network.protocol.login.ClientboundLoginFinishedPacket` | record | 2 | gameProfile, sessionId | `STREAM_CODEC` | composite (2) |
@@ -145,51 +184,80 @@
 | `minecraft:move_entity_pos_rot` | clientbound | `play:55` | `net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$PosRot` | class | 7 | entityId, delta, yRot, xRot, onGround, hasRot, hasPos | `STREAM_CODEC` | custom (0) |
 | `minecraft:move_entity_rot` | clientbound | `play:57` | `net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot` | class | 7 | entityId, delta, yRot, xRot, onGround, hasRot, hasPos | `STREAM_CODEC` | custom (0) |
 | `minecraft:move_minecart_along_track` | clientbound | `play:56` | `net.minecraft.network.protocol.game.ClientboundMoveMinecartPacket` | record | 2 | entityId, lerpSteps | `STREAM_CODEC` | composite (2) |
+| `minecraft:move_player_pos` | serverbound | `play:30` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$Pos` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
+| `minecraft:move_player_pos_rot` | serverbound | `play:31` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$PosRot` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
+| `minecraft:move_player_rot` | serverbound | `play:32` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$Rot` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
+| `minecraft:move_player_status_only` | serverbound | `play:33` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$StatusOnly` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
 | `minecraft:move_vehicle` | clientbound | `play:58` | `net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket` | record | 1 | movingTo | `STREAM_CODEC` | custom (0) |
+| `minecraft:move_vehicle` | serverbound | `play:34` | `net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket` | record | 2 | movingTo, onGround | `STREAM_CODEC` | composite (2) |
 | `minecraft:open_book` | clientbound | `play:59` | `net.minecraft.network.protocol.game.ClientboundOpenBookPacket` | record | 1 | hand | `STREAM_CODEC` | composite (1) |
 | `minecraft:open_screen` | clientbound | `play:60` | `net.minecraft.network.protocol.game.ClientboundOpenScreenPacket` | class | 3 | containerId, type, title | `STREAM_CODEC` | composite (3) |
 | `minecraft:open_sign_editor` | clientbound | `play:61` | `net.minecraft.network.protocol.game.ClientboundOpenSignEditorPacket` | record | 2 | pos, slot | `STREAM_CODEC` | composite (2) |
+| `minecraft:paddle_boat` | serverbound | `play:35` | `net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket` | class | 2 | left, right | `STREAM_CODEC` | custom (0) |
+| `minecraft:pick_item_from_block` | serverbound | `play:36` | `net.minecraft.network.protocol.game.ServerboundPickItemFromBlockPacket` | record | 2 | pos, includeData | `STREAM_CODEC` | composite (2) |
+| `minecraft:pick_item_from_entity` | serverbound | `play:37` | `net.minecraft.network.protocol.game.ServerboundPickItemFromEntityPacket` | record | 2 | id, includeData | `STREAM_CODEC` | composite (2) |
 | `minecraft:ping` | clientbound | `configuration:5, play:62` | `net.minecraft.network.protocol.common.ClientboundPingPacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
+| `minecraft:ping_request` | serverbound | `play:38, status:1` | `net.minecraft.network.protocol.ping.ServerboundPingRequestPacket` | class | 1 | time | `STREAM_CODEC` | custom (0) |
 | `minecraft:place_ghost_recipe` | clientbound | `play:64` | `net.minecraft.network.protocol.game.ClientboundPlaceGhostRecipePacket` | record | 2 | containerId, recipeDisplay | `STREAM_CODEC` | composite (2) |
+| `minecraft:place_recipe` | serverbound | `play:39` | `net.minecraft.network.protocol.game.ServerboundPlaceRecipePacket` | record | 3 | containerId, recipe, useMaxItems | `STREAM_CODEC` | composite (3) |
 | `minecraft:player_abilities` | clientbound | `play:65` | `net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket` | class | 6 | invulnerable, isFlying, canFly, instabuild, flyingSpeed, walkingSpeed | `STREAM_CODEC` | custom (0) |
+| `minecraft:player_abilities` | serverbound | `play:40` | `net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket` | class | 1 | isFlying | `STREAM_CODEC` | custom (0) |
+| `minecraft:player_action` | serverbound | `play:41` | `net.minecraft.network.protocol.game.ServerboundPlayerActionPacket` | class | 4 | pos, direction, action, sequence | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_chat` | clientbound | `play:66` | `net.minecraft.network.protocol.game.ClientboundPlayerChatPacket` | record | 8 | globalIndex, sender, index, signature, body, unsignedContent, filterMask, chatType | `STREAM_CODEC` | composite (8) |
 | `minecraft:player_combat_end` | clientbound | `play:67` | `net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket` | class | 1 | duration | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_combat_enter` | clientbound | `play:68` | `net.minecraft.network.protocol.game.ClientboundPlayerCombatEnterPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_combat_kill` | clientbound | `play:69` | `net.minecraft.network.protocol.game.ClientboundPlayerCombatKillPacket` | record | 2 | playerId, message | `STREAM_CODEC` | composite (2) |
+| `minecraft:player_command` | serverbound | `play:42` | `net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket` | class | 3 | id, action, data | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_info_remove` | clientbound | `play:70` | `net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket` | record | 1 | profileIds | `STREAM_CODEC` | composite (1) |
 | `minecraft:player_info_update` | clientbound | `play:71` | `net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket` | class | 2 | actions, entries | `STREAM_CODEC` | custom (0) |
+| `minecraft:player_input` | serverbound | `play:43` | `net.minecraft.network.protocol.game.ServerboundPlayerInputPacket` | record | 1 | input | `STREAM_CODEC` | composite (1) |
+| `minecraft:player_loaded` | serverbound | `play:44` | `net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_look_at` | clientbound | `play:72` | `net.minecraft.network.protocol.game.ClientboundPlayerLookAtPacket` | class | 7 | x, y, z, entity, fromAnchor, toAnchor, atEntity | `STREAM_CODEC` | custom (0) |
 | `minecraft:player_position` | clientbound | `play:73` | `net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket` | record | 3 | id, change, relatives | `STREAM_CODEC` | composite (3) |
 | `minecraft:player_rotation` | clientbound | `play:74` | `net.minecraft.network.protocol.game.ClientboundPlayerRotationPacket` | record | 4 | yRot, relativeY, xRot, relativeX | `STREAM_CODEC` | composite (4) |
+| `minecraft:pong` | serverbound | `configuration:5, play:45` | `net.minecraft.network.protocol.common.ServerboundPongPacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
 | `minecraft:pong_response` | clientbound | `play:63, status:1` | `net.minecraft.network.protocol.ping.ClientboundPongResponsePacket` | record | 1 | time | `STREAM_CODEC` | custom (0) |
 | `minecraft:post_effects` | clientbound | `configuration:10, play:83` | `net.minecraft.network.protocol.common.ClientboundPostEffectsPacket` | record | 1 | postEffects | `STREAM_CODEC` | composite (1) |
 | `minecraft:projectile_power` | clientbound | `play:138` | `net.minecraft.network.protocol.game.ClientboundProjectilePowerPacket` | class | 2 | id, accelerationPower | `STREAM_CODEC` | custom (0) |
+| `minecraft:punch` | serverbound | `play:46` | `net.minecraft.network.protocol.game.ServerboundPunchPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:recipe_book_add` | clientbound | `play:75` | `net.minecraft.network.protocol.game.ClientboundRecipeBookAddPacket` | record | 2 | entries, replace | `STREAM_CODEC` | composite (2) |
+| `minecraft:recipe_book_change_settings` | serverbound | `play:47` | `net.minecraft.network.protocol.game.ServerboundRecipeBookChangeSettingsPacket` | class | 3 | bookType, isOpen, isFiltering | `STREAM_CODEC` | custom (0) |
 | `minecraft:recipe_book_remove` | clientbound | `play:76` | `net.minecraft.network.protocol.game.ClientboundRecipeBookRemovePacket` | record | 1 | recipes | `STREAM_CODEC` | composite (1) |
+| `minecraft:recipe_book_seen_recipe` | serverbound | `play:48` | `net.minecraft.network.protocol.game.ServerboundRecipeBookSeenRecipePacket` | record | 1 | recipe | `STREAM_CODEC` | composite (1) |
 | `minecraft:recipe_book_settings` | clientbound | `play:77` | `net.minecraft.network.protocol.game.ClientboundRecipeBookSettingsPacket` | record | 1 | bookSettings | `STREAM_CODEC` | composite (1) |
 | `minecraft:registry_data` | clientbound | `configuration:7` | `net.minecraft.network.protocol.configuration.ClientboundRegistryDataPacket` | record | 2 | registry, entries | `STREAM_CODEC` | composite (2) |
 | `minecraft:remove_entities` | clientbound | `play:78` | `net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket` | record | 1 | entityIds | `STREAM_CODEC` | composite (1) |
 | `minecraft:remove_mob_effect` | clientbound | `play:79` | `net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket` | record | 2 | entityId, effect | `STREAM_CODEC` | composite (2) |
+| `minecraft:rename_item` | serverbound | `play:49` | `net.minecraft.network.protocol.game.ServerboundRenameItemPacket` | class | 1 | name | `STREAM_CODEC` | custom (0) |
 | `minecraft:reset_chat` | clientbound | `configuration:6` | `net.minecraft.network.protocol.configuration.ClientboundResetChatPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:reset_score` | clientbound | `play:80` | `net.minecraft.network.protocol.game.ClientboundResetScorePacket` | record | 2 | owner, objectiveName | `STREAM_CODEC` | custom (0) |
+| `minecraft:resource_pack` | serverbound | `configuration:6, play:50` | `net.minecraft.network.protocol.common.ServerboundResourcePackPacket` | record | 2 | id, action | `STREAM_CODEC` | custom (0) |
 | `minecraft:resource_pack_pop` | clientbound | `configuration:8, play:81` | `net.minecraft.network.protocol.common.ClientboundResourcePackPopPacket` | record | 1 | id | `STREAM_CODEC` | custom (0) |
 | `minecraft:resource_pack_push` | clientbound | `configuration:9, play:82` | `net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket` | record | 5 | id, url, hash, required, prompt | `STREAM_CODEC` | composite (5) |
 | `minecraft:respawn` | clientbound | `play:84` | `net.minecraft.network.protocol.game.ClientboundRespawnPacket` | record | 2 | commonPlayerSpawnInfo, dataToKeep | `STREAM_CODEC` | composite (2) |
 | `minecraft:rotate_head` | clientbound | `play:85` | `net.minecraft.network.protocol.game.ClientboundRotateHeadPacket` | class | 2 | entityId, yHeadRot | `STREAM_CODEC` | custom (0) |
 | `minecraft:section_blocks_update` | clientbound | `play:86` | `net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket` | class | 3 | sectionPos, positions, states | `STREAM_CODEC` | custom (0) |
+| `minecraft:seen_advancements` | serverbound | `play:51` | `net.minecraft.network.protocol.game.ServerboundSeenAdvancementsPacket` | class | 2 | action, tab | `STREAM_CODEC` | custom (0) |
 | `minecraft:select_advancements_tab` | clientbound | `play:87` | `net.minecraft.network.protocol.game.ClientboundSelectAdvancementsTabPacket` | class | 1 | tab | `STREAM_CODEC` | custom (0) |
 | `minecraft:select_known_packs` | clientbound | `configuration:15` | `net.minecraft.network.protocol.configuration.ClientboundSelectKnownPacks` | record | 1 | knownPacks | `STREAM_CODEC` | composite (1) |
+| `minecraft:select_known_packs` | serverbound | `configuration:7` | `net.minecraft.network.protocol.configuration.ServerboundSelectKnownPacks` | record | 1 | knownPacks | `STREAM_CODEC` | composite (1) |
+| `minecraft:select_trade` | serverbound | `play:52` | `net.minecraft.network.protocol.game.ServerboundSelectTradePacket` | class | 1 | item | `STREAM_CODEC` | custom (0) |
 | `minecraft:server_data` | clientbound | `play:88` | `net.minecraft.network.protocol.game.ClientboundServerDataPacket` | record | 2 | motd, iconBytes | `STREAM_CODEC` | composite (2) |
 | `minecraft:server_links` | clientbound | `configuration:17, play:140` | `net.minecraft.network.protocol.common.ClientboundServerLinksPacket` | record | 1 | links | `STREAM_CODEC` | composite (1) |
 | `minecraft:set_action_bar_text` | clientbound | `play:89` | `net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket` | record | 1 | text | `STREAM_CODEC` | composite (1) |
+| `minecraft:set_beacon` | serverbound | `play:53` | `net.minecraft.network.protocol.game.ServerboundSetBeaconPacket` | record | 2 | primary, secondary | `STREAM_CODEC` | composite (2) |
 | `minecraft:set_border_center` | clientbound | `play:90` | `net.minecraft.network.protocol.game.ClientboundSetBorderCenterPacket` | class | 2 | newCenterX, newCenterZ | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_border_lerp_size` | clientbound | `play:91` | `net.minecraft.network.protocol.game.ClientboundSetBorderLerpSizePacket` | class | 3 | oldSize, newSize, lerpTime | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_border_size` | clientbound | `play:92` | `net.minecraft.network.protocol.game.ClientboundSetBorderSizePacket` | class | 1 | size | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_border_warning_delay` | clientbound | `play:93` | `net.minecraft.network.protocol.game.ClientboundSetBorderWarningDelayPacket` | class | 1 | warningDelay | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_border_warning_distance` | clientbound | `play:94` | `net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket` | class | 1 | warningBlocks | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_camera` | clientbound | `play:95` | `net.minecraft.network.protocol.game.ClientboundSetCameraPacket` | class | 1 | cameraId | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_carried_item` | serverbound | `play:54` | `net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket` | class | 1 | slot | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_chunk_cache_center` | clientbound | `play:96` | `net.minecraft.network.protocol.game.ClientboundSetChunkCacheCenterPacket` | class | 2 | x, z | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_chunk_cache_radius` | clientbound | `play:97` | `net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket` | class | 1 | radius | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_command_block` | serverbound | `play:55` | `net.minecraft.network.protocol.game.ServerboundSetCommandBlockPacket` | class | 6 | pos, command, trackOutput, conditional, automatic, mode | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_command_minecart` | serverbound | `play:56` | `net.minecraft.network.protocol.game.ServerboundSetCommandMinecartPacket` | class | 3 | entity, command, trackOutput | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_creative_mode_slot` | serverbound | `play:57` | `net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket` | record | 2 | slotNum, itemStack | `STREAM_CODEC` | composite (2) |
 | `minecraft:set_cursor_item` | clientbound | `play:98` | `net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket` | record | 1 | contents | `STREAM_CODEC` | composite (1) |
 | `minecraft:set_default_spawn_position` | clientbound | `play:99` | `net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket` | record | 1 | respawnData | `STREAM_CODEC` | composite (1) |
 | `minecraft:set_display_objective` | clientbound | `play:100` | `net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket` | class | 2 | slot, objectiveName | `STREAM_CODEC` | custom (0) |
@@ -198,22 +266,29 @@
 | `minecraft:set_entity_motion` | clientbound | `play:103` | `net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket` | record | 2 | id, movement | `STREAM_CODEC` | composite (2) |
 | `minecraft:set_equipment` | clientbound | `play:104` | `net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket` | class | 2 | entity, slots | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_experience` | clientbound | `play:105` | `net.minecraft.network.protocol.game.ClientboundSetExperiencePacket` | class | 3 | experienceProgress, totalExperience, experienceLevel | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_game_rule` | serverbound | `play:58` | `net.minecraft.network.protocol.game.ServerboundSetGameRulePacket` | record | 1 | entries | `STREAM_CODEC` | composite (1) |
 | `minecraft:set_health` | clientbound | `play:106` | `net.minecraft.network.protocol.game.ClientboundSetHealthPacket` | class | 3 | health, food, saturation | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_held_slot` | clientbound | `play:107` | `net.minecraft.network.protocol.game.ClientboundSetHeldSlotPacket` | record | 1 | slot | `STREAM_CODEC` | composite (1) |
+| `minecraft:set_jigsaw_block` | serverbound | `play:59` | `net.minecraft.network.protocol.game.ServerboundSetJigsawBlockPacket` | class | 8 | pos, name, target, pool, finalState, joint, selectionPriority, placementPriority | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_objective` | clientbound | `play:108` | `net.minecraft.network.protocol.game.ClientboundSetObjectivePacket` | class | 5 | objectiveName, displayName, renderType, numberFormat, method | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_passengers` | clientbound | `play:109` | `net.minecraft.network.protocol.game.ClientboundSetPassengersPacket` | class | 2 | vehicle, passengers | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_player_inventory` | clientbound | `play:110` | `net.minecraft.network.protocol.game.ClientboundSetPlayerInventoryPacket` | record | 2 | slot, contents | `STREAM_CODEC` | composite (2) |
 | `minecraft:set_player_team` | clientbound | `play:111` | `net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket` | class | 4 | method, name, players, parameters | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_score` | clientbound | `play:112` | `net.minecraft.network.protocol.game.ClientboundSetScorePacket` | record | 5 | owner, objectiveName, score, display, numberFormat | `STREAM_CODEC` | composite (5) |
 | `minecraft:set_simulation_distance` | clientbound | `play:113` | `net.minecraft.network.protocol.game.ClientboundSetSimulationDistancePacket` | record | 1 | simulationDistance | `STREAM_CODEC` | custom (0) |
+| `minecraft:set_structure_block` | serverbound | `play:60` | `net.minecraft.network.protocol.game.ServerboundSetStructureBlockPacket` | class | 15 | pos, updateType, mode, name, offset, size, mirror, rotation, data, ignoreEntities, strict, showAir, showBoundingBox, integrity, seed | `STREAM_CODEC` | custom (0) |
 | `minecraft:set_subtitle_text` | clientbound | `play:114` | `net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket` | record | 1 | text | `STREAM_CODEC` | composite (1) |
+| `minecraft:set_test_block` | serverbound | `play:61` | `net.minecraft.network.protocol.game.ServerboundSetTestBlockPacket` | record | 3 | position, mode, message | `STREAM_CODEC` | composite (3) |
 | `minecraft:set_time` | clientbound | `play:115` | `net.minecraft.network.protocol.game.ClientboundSetTimePacket` | record | 2 | gameTime, clockUpdates | `STREAM_CODEC` | composite (2) |
 | `minecraft:set_title_text` | clientbound | `play:116` | `net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket` | record | 1 | text | `STREAM_CODEC` | composite (1) |
 | `minecraft:set_titles_animation` | clientbound | `play:117` | `net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket` | class | 3 | fadeIn, stay, fadeOut | `STREAM_CODEC` | custom (0) |
 | `minecraft:show_dialog` | clientbound | `configuration:19, play:143` | `net.minecraft.network.protocol.common.ClientboundShowDialogPacket` | record | 1 | dialog | `STREAM_CODEC` | composite (1) |
+| `minecraft:sign_update` | serverbound | `play:62` | `net.minecraft.network.protocol.game.ServerboundSignUpdatePacket` | record | 3 | pos, lines, slot | `STREAM_CODEC` | composite (3) |
 | `minecraft:sound` | clientbound | `play:119` | `net.minecraft.network.protocol.game.ClientboundSoundPacket` | class | 8 | sound, source, x, y, z, volume, pitch, seed | `STREAM_CODEC` | custom (0) |
 | `minecraft:sound_entity` | clientbound | `play:118` | `net.minecraft.network.protocol.game.ClientboundSoundEntityPacket` | class | 6 | sound, source, id, volume, pitch, seed | `STREAM_CODEC` | custom (0) |
+| `minecraft:spectator_action` | serverbound | `play:63` | `net.minecraft.network.protocol.game.ServerboundSpectatorActionPacket` | record | 1 | spectateEntityId | `STREAM_CODEC` | composite (1) |
 | `minecraft:start_configuration` | clientbound | `play:120` | `net.minecraft.network.protocol.game.ClientboundStartConfigurationPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
+| `minecraft:status_request` | serverbound | `status:0` | `net.minecraft.network.protocol.status.ServerboundStatusRequestPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
 | `minecraft:status_response` | clientbound | `status:0` | `net.minecraft.network.protocol.status.ClientboundStatusResponsePacket` | record | 1 | status | `STREAM_CODEC` | composite (1) |
 | `minecraft:stop_sound` | clientbound | `play:121` | `net.minecraft.network.protocol.game.ClientboundStopSoundPacket` | class | 2 | name, source | `STREAM_CODEC` | custom (0) |
 | `minecraft:store_cookie` | clientbound | `configuration:11, play:122` | `net.minecraft.network.protocol.common.ClientboundStoreCookiePacket` | record | 2 | key, payload | `STREAM_CODEC` | custom (0) |
@@ -223,6 +298,8 @@
 | `minecraft:tag_query` | clientbound | `play:126` | `net.minecraft.network.protocol.game.ClientboundTagQueryPacket` | class | 2 | transactionId, tag | `STREAM_CODEC` | custom (0) |
 | `minecraft:take_item_entity` | clientbound | `play:127` | `net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket` | class | 3 | itemId, playerId, amount | `STREAM_CODEC` | custom (0) |
 | `minecraft:teleport_entity` | clientbound | `play:128` | `net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket` | record | 4 | id, change, relatives, onGround | `STREAM_CODEC` | composite (4) |
+| `minecraft:teleport_to_entity` | serverbound | `play:64` | `net.minecraft.network.protocol.game.ServerboundTeleportToEntityPacket` | class | 1 | uuid | `STREAM_CODEC` | custom (0) |
+| `minecraft:test_instance_block_action` | serverbound | `play:65` | `net.minecraft.network.protocol.game.ServerboundTestInstanceBlockActionPacket` | record | 3 | pos, action, data | `STREAM_CODEC` | composite (3) |
 | `minecraft:test_instance_block_status` | clientbound | `play:129` | `net.minecraft.network.protocol.game.ClientboundTestInstanceBlockStatus` | record | 2 | status, size | `STREAM_CODEC` | composite (2) |
 | `minecraft:ticking_state` | clientbound | `play:130` | `net.minecraft.network.protocol.game.ClientboundTickingStatePacket` | record | 2 | tickRate, isFrozen | `STREAM_CODEC` | custom (0) |
 | `minecraft:ticking_step` | clientbound | `play:131` | `net.minecraft.network.protocol.game.ClientboundTickingStepPacket` | record | 1 | tickSteps | `STREAM_CODEC` | custom (0) |
@@ -233,92 +310,16 @@
 | `minecraft:update_mob_effect` | clientbound | `play:135` | `net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket` | class | 5 | entityId, effect, effectAmplifier, effectDurationTicks, flags | `STREAM_CODEC` | custom (0) |
 | `minecraft:update_recipes` | clientbound | `play:136` | `net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket` | record | 2 | itemSets, stonecutterRecipes | `STREAM_CODEC` | composite (2) |
 | `minecraft:update_tags` | clientbound | `configuration:14, play:137` | `net.minecraft.network.protocol.common.ClientboundUpdateTagsPacket` | record | 1 | tags | `STREAM_CODEC` | composite (1) |
-| `minecraft:waypoint` | clientbound | `play:141` | `net.minecraft.network.protocol.game.ClientboundTrackedWaypointPacket` | record | 2 | operation, waypoint | `STREAM_CODEC` | composite (2) |
-| `minecraft:accept_code_of_conduct` | serverbound | `configuration:9` | `net.minecraft.network.protocol.configuration.ServerboundAcceptCodeOfConductPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:accept_teleportation` | serverbound | `play:0` | `net.minecraft.network.protocol.game.ServerboundAcceptTeleportationPacket` | record | 6 | id, x, y, z, yRot, xRot | `STREAM_CODEC` | composite (6) |
-| `minecraft:attack` | serverbound | `play:1` | `net.minecraft.network.protocol.game.ServerboundAttackPacket` | record | 1 | entityId | `STREAM_CODEC` | composite (1) |
-| `minecraft:block_entity_tag_query` | serverbound | `play:2` | `net.minecraft.network.protocol.game.ServerboundBlockEntityTagQueryPacket` | class | 2 | transactionId, pos | `STREAM_CODEC` | custom (0) |
-| `minecraft:bundle_item_selected` | serverbound | `play:3` | `net.minecraft.network.protocol.game.ServerboundSelectBundleItemPacket` | record | 2 | slotId, selectedItemIndex | `STREAM_CODEC` | custom (0) |
-| `minecraft:change_difficulty` | serverbound | `play:4` | `net.minecraft.network.protocol.game.ServerboundChangeDifficultyPacket` | record | 1 | difficulty | `STREAM_CODEC` | composite (1) |
-| `minecraft:change_game_mode` | serverbound | `play:5` | `net.minecraft.network.protocol.game.ServerboundChangeGameModePacket` | record | 1 | mode | `STREAM_CODEC` | composite (1) |
-| `minecraft:chat` | serverbound | `play:9` | `net.minecraft.network.protocol.game.ServerboundChatPacket` | record | 5 | message, timeStamp, salt, signature, lastSeenMessages | `STREAM_CODEC` | composite (5) |
-| `minecraft:chat_ack` | serverbound | `play:6` | `net.minecraft.network.protocol.game.ServerboundChatAckPacket` | record | 1 | offset | `STREAM_CODEC` | custom (0) |
-| `minecraft:chat_command` | serverbound | `play:7` | `net.minecraft.network.protocol.game.ServerboundChatCommandPacket` | record | 1 | command | `STREAM_CODEC` | custom (0) |
-| `minecraft:chat_command_signed` | serverbound | `play:8` | `net.minecraft.network.protocol.game.ServerboundChatCommandSignedPacket` | record | 5 | command, timeStamp, salt, argumentSignatures, lastSeenMessages | `STREAM_CODEC` | composite (5) |
-| `minecraft:chat_session_update` | serverbound | `play:10` | `net.minecraft.network.protocol.game.ServerboundChatSessionUpdatePacket` | record | 1 | chatSession | `STREAM_CODEC` | custom (0) |
-| `minecraft:chunk_batch_received` | serverbound | `play:11` | `net.minecraft.network.protocol.game.ServerboundChunkBatchReceivedPacket` | record | 1 | desiredChunksPerTick | `STREAM_CODEC` | custom (0) |
-| `minecraft:client_command` | serverbound | `play:12` | `net.minecraft.network.protocol.game.ServerboundClientCommandPacket` | class | 1 | action | `STREAM_CODEC` | custom (0) |
-| `minecraft:client_information` | serverbound | `configuration:0, play:14` | `net.minecraft.network.protocol.common.ServerboundClientInformationPacket` | record | 1 | information | `STREAM_CODEC` | custom (0) |
-| `minecraft:client_tick_end` | serverbound | `play:13` | `net.minecraft.network.protocol.game.ServerboundClientTickEndPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:command_suggestion` | serverbound | `play:15` | `net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket` | record | 2 | id, command | `STREAM_CODEC` | composite (2) |
-| `minecraft:configuration_acknowledged` | serverbound | `play:16` | `net.minecraft.network.protocol.game.ServerboundConfigurationAcknowledgedPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:container_button_click` | serverbound | `play:17` | `net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket` | record | 2 | containerId, buttonId | `STREAM_CODEC` | composite (2) |
-| `minecraft:container_click` | serverbound | `play:18` | `net.minecraft.network.protocol.game.ServerboundContainerClickPacket` | record | 7 | containerId, stateId, slotNum, buttonNum, containerInput, changedSlots, carriedItem | `STREAM_CODEC` | composite (7) |
-| `minecraft:container_close` | serverbound | `play:19` | `net.minecraft.network.protocol.game.ServerboundContainerClosePacket` | class | 1 | containerId | `STREAM_CODEC` | custom (0) |
-| `minecraft:container_slot_state_changed` | serverbound | `play:20` | `net.minecraft.network.protocol.game.ServerboundContainerSlotStateChangedPacket` | record | 3 | slotId, containerId, newState | `STREAM_CODEC` | custom (0) |
-| `minecraft:cookie_response` | serverbound | `configuration:1, login:4, play:21` | `net.minecraft.network.protocol.cookie.ServerboundCookieResponsePacket` | record | 2 | key, payload | `STREAM_CODEC` | custom (0) |
-| `minecraft:custom_click_action` | serverbound | `configuration:8, play:68` | `net.minecraft.network.protocol.common.ServerboundCustomClickActionPacket` | record | 2 | id, payload | `STREAM_CODEC` | composite (2) |
-| `minecraft:custom_payload` | serverbound | `configuration:2, play:22` | `net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket` | record | 1 | payload | `STREAM_CODEC` | custom (0) |
-| `minecraft:custom_query_answer` | serverbound | `login:2` | `net.minecraft.network.protocol.login.ServerboundCustomQueryAnswerPacket` | record | 2 | transactionId, payload | `STREAM_CODEC` | custom (0) |
-| `minecraft:debug_subscription_request` | serverbound | `play:23` | `net.minecraft.network.protocol.game.ServerboundDebugSubscriptionRequestPacket` | record | 1 | subscriptions | `STREAM_CODEC` | custom (0) |
-| `minecraft:edit_book` | serverbound | `play:24` | `net.minecraft.network.protocol.game.ServerboundEditBookPacket` | record | 3 | slot, pages, title | `STREAM_CODEC` | composite (3) |
-| `minecraft:entity_tag_query` | serverbound | `play:25` | `net.minecraft.network.protocol.game.ServerboundEntityTagQueryPacket` | class | 2 | transactionId, entityId | `STREAM_CODEC` | custom (0) |
-| `minecraft:finish_configuration` | serverbound | `configuration:3` | `net.minecraft.network.protocol.configuration.ServerboundFinishConfigurationPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:hello` | serverbound | `login:0` | `net.minecraft.network.protocol.login.ServerboundHelloPacket` | record | 2 | name, profileId | `STREAM_CODEC` | custom (0) |
-| `minecraft:intention` | serverbound | `handshake:0` | `net.minecraft.network.protocol.handshake.ClientIntentionPacket` | record | 4 | protocolVersion, hostName, port, intention | `STREAM_CODEC` | custom (0) |
-| `minecraft:interact` | serverbound | `play:26` | `net.minecraft.network.protocol.game.ServerboundInteractPacket` | record | 4 | entityId, hand, location, usingSecondaryAction | `STREAM_CODEC` | composite (4) |
-| `minecraft:jigsaw_generate` | serverbound | `play:27` | `net.minecraft.network.protocol.game.ServerboundJigsawGeneratePacket` | class | 3 | pos, levels, keepJigsaws | `STREAM_CODEC` | custom (0) |
-| `minecraft:keep_alive` | serverbound | `configuration:4, play:28` | `net.minecraft.network.protocol.common.ServerboundKeepAlivePacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
-| `minecraft:key` | serverbound | `login:1` | `net.minecraft.network.protocol.login.ServerboundKeyPacket` | class | 2 | keybytes, encryptedChallenge | `STREAM_CODEC` | custom (0) |
-| `minecraft:lock_difficulty` | serverbound | `play:29` | `net.minecraft.network.protocol.game.ServerboundLockDifficultyPacket` | class | 1 | locked | `STREAM_CODEC` | custom (0) |
-| `minecraft:login_acknowledged` | serverbound | `login:3` | `net.minecraft.network.protocol.login.ServerboundLoginAcknowledgedPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:move_player_pos` | serverbound | `play:30` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$Pos` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
-| `minecraft:move_player_pos_rot` | serverbound | `play:31` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$PosRot` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
-| `minecraft:move_player_rot` | serverbound | `play:32` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$Rot` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
-| `minecraft:move_player_status_only` | serverbound | `play:33` | `net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$StatusOnly` | class | 9 | x, y, z, yRot, xRot, onGround, horizontalCollision, hasPos, hasRot | `STREAM_CODEC` | custom (0) |
-| `minecraft:move_vehicle` | serverbound | `play:34` | `net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket` | record | 2 | movingTo, onGround | `STREAM_CODEC` | composite (2) |
-| `minecraft:paddle_boat` | serverbound | `play:35` | `net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket` | class | 2 | left, right | `STREAM_CODEC` | custom (0) |
-| `minecraft:pick_item_from_block` | serverbound | `play:36` | `net.minecraft.network.protocol.game.ServerboundPickItemFromBlockPacket` | record | 2 | pos, includeData | `STREAM_CODEC` | composite (2) |
-| `minecraft:pick_item_from_entity` | serverbound | `play:37` | `net.minecraft.network.protocol.game.ServerboundPickItemFromEntityPacket` | record | 2 | id, includeData | `STREAM_CODEC` | composite (2) |
-| `minecraft:ping_request` | serverbound | `play:38, status:1` | `net.minecraft.network.protocol.ping.ServerboundPingRequestPacket` | class | 1 | time | `STREAM_CODEC` | custom (0) |
-| `minecraft:place_recipe` | serverbound | `play:39` | `net.minecraft.network.protocol.game.ServerboundPlaceRecipePacket` | record | 3 | containerId, recipe, useMaxItems | `STREAM_CODEC` | composite (3) |
-| `minecraft:player_abilities` | serverbound | `play:40` | `net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket` | class | 1 | isFlying | `STREAM_CODEC` | custom (0) |
-| `minecraft:player_action` | serverbound | `play:41` | `net.minecraft.network.protocol.game.ServerboundPlayerActionPacket` | class | 4 | pos, direction, action, sequence | `STREAM_CODEC` | custom (0) |
-| `minecraft:player_command` | serverbound | `play:42` | `net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket` | class | 3 | id, action, data | `STREAM_CODEC` | custom (0) |
-| `minecraft:player_input` | serverbound | `play:43` | `net.minecraft.network.protocol.game.ServerboundPlayerInputPacket` | record | 1 | input | `STREAM_CODEC` | composite (1) |
-| `minecraft:player_loaded` | serverbound | `play:44` | `net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:pong` | serverbound | `configuration:5, play:45` | `net.minecraft.network.protocol.common.ServerboundPongPacket` | class | 1 | id | `STREAM_CODEC` | custom (0) |
-| `minecraft:punch` | serverbound | `play:46` | `net.minecraft.network.protocol.game.ServerboundPunchPacket` | record | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:recipe_book_change_settings` | serverbound | `play:47` | `net.minecraft.network.protocol.game.ServerboundRecipeBookChangeSettingsPacket` | class | 3 | bookType, isOpen, isFiltering | `STREAM_CODEC` | custom (0) |
-| `minecraft:recipe_book_seen_recipe` | serverbound | `play:48` | `net.minecraft.network.protocol.game.ServerboundRecipeBookSeenRecipePacket` | record | 1 | recipe | `STREAM_CODEC` | composite (1) |
-| `minecraft:rename_item` | serverbound | `play:49` | `net.minecraft.network.protocol.game.ServerboundRenameItemPacket` | class | 1 | name | `STREAM_CODEC` | custom (0) |
-| `minecraft:resource_pack` | serverbound | `configuration:6, play:50` | `net.minecraft.network.protocol.common.ServerboundResourcePackPacket` | record | 2 | id, action | `STREAM_CODEC` | custom (0) |
-| `minecraft:seen_advancements` | serverbound | `play:51` | `net.minecraft.network.protocol.game.ServerboundSeenAdvancementsPacket` | class | 2 | action, tab | `STREAM_CODEC` | custom (0) |
-| `minecraft:select_known_packs` | serverbound | `configuration:7` | `net.minecraft.network.protocol.configuration.ServerboundSelectKnownPacks` | record | 1 | knownPacks | `STREAM_CODEC` | composite (1) |
-| `minecraft:select_trade` | serverbound | `play:52` | `net.minecraft.network.protocol.game.ServerboundSelectTradePacket` | class | 1 | item | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_beacon` | serverbound | `play:53` | `net.minecraft.network.protocol.game.ServerboundSetBeaconPacket` | record | 2 | primary, secondary | `STREAM_CODEC` | composite (2) |
-| `minecraft:set_carried_item` | serverbound | `play:54` | `net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket` | class | 1 | slot | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_command_block` | serverbound | `play:55` | `net.minecraft.network.protocol.game.ServerboundSetCommandBlockPacket` | class | 6 | pos, command, trackOutput, conditional, automatic, mode | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_command_minecart` | serverbound | `play:56` | `net.minecraft.network.protocol.game.ServerboundSetCommandMinecartPacket` | class | 3 | entity, command, trackOutput | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_creative_mode_slot` | serverbound | `play:57` | `net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket` | record | 2 | slotNum, itemStack | `STREAM_CODEC` | composite (2) |
-| `minecraft:set_game_rule` | serverbound | `play:58` | `net.minecraft.network.protocol.game.ServerboundSetGameRulePacket` | record | 1 | entries | `STREAM_CODEC` | composite (1) |
-| `minecraft:set_jigsaw_block` | serverbound | `play:59` | `net.minecraft.network.protocol.game.ServerboundSetJigsawBlockPacket` | class | 8 | pos, name, target, pool, finalState, joint, selectionPriority, placementPriority | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_structure_block` | serverbound | `play:60` | `net.minecraft.network.protocol.game.ServerboundSetStructureBlockPacket` | class | 15 | pos, updateType, mode, name, offset, size, mirror, rotation, data, ignoreEntities, strict, showAir, showBoundingBox, integrity, seed | `STREAM_CODEC` | custom (0) |
-| `minecraft:set_test_block` | serverbound | `play:61` | `net.minecraft.network.protocol.game.ServerboundSetTestBlockPacket` | record | 3 | position, mode, message | `STREAM_CODEC` | composite (3) |
-| `minecraft:sign_update` | serverbound | `play:62` | `net.minecraft.network.protocol.game.ServerboundSignUpdatePacket` | record | 3 | pos, lines, slot | `STREAM_CODEC` | composite (3) |
-| `minecraft:spectator_action` | serverbound | `play:63` | `net.minecraft.network.protocol.game.ServerboundSpectatorActionPacket` | record | 1 | spectateEntityId | `STREAM_CODEC` | composite (1) |
-| `minecraft:status_request` | serverbound | `status:0` | `net.minecraft.network.protocol.status.ServerboundStatusRequestPacket` | class | 0 | — | `STREAM_CODEC` | custom (0) |
-| `minecraft:teleport_to_entity` | serverbound | `play:64` | `net.minecraft.network.protocol.game.ServerboundTeleportToEntityPacket` | class | 1 | uuid | `STREAM_CODEC` | custom (0) |
-| `minecraft:test_instance_block_action` | serverbound | `play:65` | `net.minecraft.network.protocol.game.ServerboundTestInstanceBlockActionPacket` | record | 3 | pos, action, data | `STREAM_CODEC` | composite (3) |
 | `minecraft:use_item` | serverbound | `play:67` | `net.minecraft.network.protocol.game.ServerboundUseItemPacket` | record | 4 | hand, sequence, yRot, xRot | `STREAM_CODEC` | composite (4) |
 | `minecraft:use_item_on` | serverbound | `play:66` | `net.minecraft.network.protocol.game.ServerboundUseItemOnPacket` | record | 3 | hand, hitResult, sequence | `STREAM_CODEC` | composite (3) |
+| `minecraft:waypoint` | clientbound | `play:141` | `net.minecraft.network.protocol.game.ClientboundTrackedWaypointPacket` | record | 2 | operation, waypoint | `STREAM_CODEC` | composite (2) |
 
-## Extractor envanteri
+## Extractor inventory
 
-Toplam **119** extractor. Her satır, o extractor'ın raporlanan çıktısını ve entry sayısını gösterir. Bazı extractor'lar tek bir ana belgeye ek olarak grup veya yan belge yazabilir (örneğin `recipes`, `all_tags`, `client_assets`).
+**119** extractors. Each row is one extractor's reported entry count and primary output; a single extractor can also write group or side documents (for example `recipes`, `all_tags` and `client_assets`).
 
-| # | Extractor | Tip | Ana çıktı | Entry | Başarılı |
-|---|---|---|---|---|---|
+| # | Extractor | Type | Primary output | Entries | Succeeded |
+| --- | --- | --- | --- | ---: | --- |
 | 1 | `advancements` | ADVANCEMENTS | `advancements/minecraft.json` | 1,866 | true |
 | 2 | `all_registries` | MISC | `registries/index.json` | 155 | true |
 | 3 | `all_tags` | TAGS | `tags/all.json` | 883 | true |
@@ -439,18 +440,18 @@ Toplam **119** extractor. Her satır, o extractor'ın raporlanan çıktısını 
 | 118 | `world_clocks` | MISC | `misc/world_clocks.json` | 2 | true |
 | 119 | `zombie_nautilus_variants` | MISC | `misc/zombie_nautilus_variants.json` | 2 | true |
 
-## Registry envanteri
+## Registry inventory
 
-Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taşır; `builtin` kayıtlar en az id ve varsa protokol ID'si taşır. Küratörlü kataloglar ayrıca `blocks/`, `items/`, `entities/`, `worldgen/`, `misc/` ve `gameplay/` altında bulunur.
+**155** registries. `source=datapack` registries carry a full codec payload; `builtin` registries carry at least their ids and, where the protocol has one, their protocol id. The curated catalogs are additionally available under `blocks/`, `items/`, `entities/`, `worldgen/`, `misc/` and `gameplay/`.
 
-| Registry | Kaynak | Entry | Protokol ID | Dump | NBT |
-|---|---|---|---|---|---|
+| Registry | Source | Entries | Protocol ids | Dump | NBT |
+| --- | --- | ---: | ---: | --- | --- |
 | `minecraft:activity` | builtin | 26 | 0–25 | `registries/dump/minecraft/activity.json` | `registries/nbt/minecraft/activity.nbt` |
-| `minecraft:advancement` | datapack | 1,866 | 0–1865 | `registries/dump/minecraft/advancement.json` | `registries/nbt/minecraft/advancement.nbt` |
+| `minecraft:advancement` | datapack | 1,866 | 0–1,865 | `registries/dump/minecraft/advancement.json` | `registries/nbt/minecraft/advancement.nbt` |
 | `minecraft:attribute` | builtin | 40 | 0–39 | `registries/dump/minecraft/attribute.json` | `registries/nbt/minecraft/attribute.nbt` |
 | `minecraft:attribute_type` | builtin | 15 | 0–14 | `registries/dump/minecraft/attribute_type.json` | `registries/nbt/minecraft/attribute_type.nbt` |
 | `minecraft:banner_pattern` | datapack | 43 | 0–42 | `registries/dump/minecraft/banner_pattern.json` | `registries/nbt/minecraft/banner_pattern.nbt` |
-| `minecraft:block` | builtin | 1,286 | 0–1285 | `registries/dump/minecraft/block.json` | `registries/nbt/minecraft/block.nbt` |
+| `minecraft:block` | builtin | 1,286 | 0–1,285 | `registries/dump/minecraft/block.json` | `registries/nbt/minecraft/block.nbt` |
 | `minecraft:block_entity_type` | builtin | 49 | 0–48 | `registries/dump/minecraft/block_entity_type.json` | `registries/nbt/minecraft/block_entity_type.nbt` |
 | `minecraft:block_predicate_type` | builtin | 16 | 0–15 | `registries/dump/minecraft/block_predicate_type.json` | `registries/nbt/minecraft/block_predicate_type.nbt` |
 | `minecraft:block_transformer` | datapack | 3 | 0–2 | `registries/dump/minecraft/block_transformer.json` | `registries/nbt/minecraft/block_transformer.nbt` |
@@ -503,7 +504,7 @@ Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taş�
 | `minecraft:input_control_type` | builtin | 4 | 0–3 | `registries/dump/minecraft/input_control_type.json` | `registries/nbt/minecraft/input_control_type.nbt` |
 | `minecraft:instrument` | datapack | 8 | 0–7 | `registries/dump/minecraft/instrument.json` | `registries/nbt/minecraft/instrument.nbt` |
 | `minecraft:int_provider_type` | builtin | 8 | 0–7 | `registries/dump/minecraft/int_provider_type.json` | `registries/nbt/minecraft/int_provider_type.nbt` |
-| `minecraft:item` | builtin | 1,658 | 0–1657 | `registries/dump/minecraft/item.json` | `registries/nbt/minecraft/item.nbt` |
+| `minecraft:item` | builtin | 1,658 | 0–1,657 | `registries/dump/minecraft/item.json` | `registries/nbt/minecraft/item.nbt` |
 | `minecraft:item_modifier` | datapack | 0 | — | `registries/dump/minecraft/item_modifier.json` | `registries/nbt/minecraft/item_modifier.nbt` |
 | `minecraft:jukebox_song` | datapack | 22 | 0–21 | `registries/dump/minecraft/jukebox_song.json` | `registries/nbt/minecraft/jukebox_song.nbt` |
 | `minecraft:loot_condition_type` | builtin | 20 | 0–19 | `registries/dump/minecraft/loot_condition_type.json` | `registries/nbt/minecraft/loot_condition_type.nbt` |
@@ -511,7 +512,7 @@ Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taş�
 | `minecraft:loot_nbt_provider_type` | builtin | 2 | 0–1 | `registries/dump/minecraft/loot_nbt_provider_type.json` | `registries/nbt/minecraft/loot_nbt_provider_type.nbt` |
 | `minecraft:loot_pool_entry_type` | builtin | 9 | 0–8 | `registries/dump/minecraft/loot_pool_entry_type.json` | `registries/nbt/minecraft/loot_pool_entry_type.nbt` |
 | `minecraft:loot_score_provider_type` | builtin | 2 | 0–1 | `registries/dump/minecraft/loot_score_provider_type.json` | `registries/nbt/minecraft/loot_score_provider_type.nbt` |
-| `minecraft:loot_table` | datapack | 1,447 | 0–1446 | `registries/dump/minecraft/loot_table.json` | `registries/nbt/minecraft/loot_table.nbt` |
+| `minecraft:loot_table` | datapack | 1,447 | 0–1,446 | `registries/dump/minecraft/loot_table.json` | `registries/nbt/minecraft/loot_table.nbt` |
 | `minecraft:map_decoration_type` | builtin | 40 | 0–39 | `registries/dump/minecraft/map_decoration_type.json` | `registries/nbt/minecraft/map_decoration_type.nbt` |
 | `minecraft:memory_module_type` | builtin | 115 | 0–114 | `registries/dump/minecraft/memory_module_type.json` | `registries/nbt/minecraft/memory_module_type.nbt` |
 | `minecraft:menu` | builtin | 25 | 0–24 | `registries/dump/minecraft/menu.json` | `registries/nbt/minecraft/menu.nbt` |
@@ -529,7 +530,7 @@ Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taş�
 | `minecraft:position_source_type` | builtin | 2 | 0–1 | `registries/dump/minecraft/position_source_type.json` | `registries/nbt/minecraft/position_source_type.nbt` |
 | `minecraft:potion` | builtin | 46 | 0–45 | `registries/dump/minecraft/potion.json` | `registries/nbt/minecraft/potion.nbt` |
 | `minecraft:predicate` | datapack | 3 | 0–2 | `registries/dump/minecraft/predicate.json` | `registries/nbt/minecraft/predicate.nbt` |
-| `minecraft:recipe` | datapack | 2,042 | 0–2041 | `registries/dump/minecraft/recipe.json` | `registries/nbt/minecraft/recipe.nbt` |
+| `minecraft:recipe` | datapack | 2,042 | 0–2,041 | `registries/dump/minecraft/recipe.json` | `registries/nbt/minecraft/recipe.nbt` |
 | `minecraft:recipe_book_category` | builtin | 13 | 0–12 | `registries/dump/minecraft/recipe_book_category.json` | `registries/nbt/minecraft/recipe_book_category.nbt` |
 | `minecraft:recipe_display` | builtin | 5 | 0–4 | `registries/dump/minecraft/recipe_display.json` | `registries/nbt/minecraft/recipe_display.nbt` |
 | `minecraft:recipe_serializer` | builtin | 22 | 0–21 | `registries/dump/minecraft/recipe_serializer.json` | `registries/nbt/minecraft/recipe_serializer.nbt` |
@@ -540,7 +541,7 @@ Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taş�
 | `minecraft:slot_display` | builtin | 11 | 0–10 | `registries/dump/minecraft/slot_display.json` | `registries/nbt/minecraft/slot_display.nbt` |
 | `minecraft:slot_source` | datapack | 0 | — | `registries/dump/minecraft/slot_source.json` | `registries/nbt/minecraft/slot_source.nbt` |
 | `minecraft:slot_source_type` | builtin | 6 | 0–5 | `registries/dump/minecraft/slot_source_type.json` | `registries/nbt/minecraft/slot_source_type.nbt` |
-| `minecraft:sound_event` | builtin | 1,991 | 0–1990 | `registries/dump/minecraft/sound_event.json` | `registries/nbt/minecraft/sound_event.nbt` |
+| `minecraft:sound_event` | builtin | 1,991 | 0–1,990 | `registries/dump/minecraft/sound_event.json` | `registries/nbt/minecraft/sound_event.nbt` |
 | `minecraft:spawn_condition_type` | builtin | 3 | 0–2 | `registries/dump/minecraft/spawn_condition_type.json` | `registries/nbt/minecraft/spawn_condition_type.nbt` |
 | `minecraft:stat_type` | builtin | 9 | 0–8 | `registries/dump/minecraft/stat_type.json` | `registries/nbt/minecraft/stat_type.nbt` |
 | `minecraft:sulfur_cube_archetype` | datapack | 12 | 0–11 | `registries/dump/minecraft/sulfur_cube_archetype.json` | `registries/nbt/minecraft/sulfur_cube_archetype.nbt` |
@@ -601,182 +602,102 @@ Toplam **155** registry. `source=datapack` olan kayıtlar codec payload'ı taş�
 | `minecraft:worldgen/world_preset` | datapack | 7 | 0–6 | `registries/dump/minecraft/worldgen/world_preset.json` | `registries/nbt/minecraft/worldgen/world_preset.nbt` |
 | `minecraft:zombie_nautilus_variant` | datapack | 2 | 0–1 | `registries/dump/minecraft/zombie_nautilus_variant.json` | `registries/nbt/minecraft/zombie_nautilus_variant.nbt` |
 
-## Registry NBT Wire Formatı
+## NBT wire format
 
-`registries/nbt/minecraft/*.nbt` dosyaları sarmalanmış NBT belgesi değil, doğrudan `registry_data` (0x07) paketinin payload'ıdır. C++ tarafı dosyayı olduğu gibi okuyup başına paket ID'si ve VarInt uzunluk ekleyebilir; NBT parse etmesi gerekmez.
+The files under `registries/nbt/` are not wrapped NBT documents: each one is the payload of a `registry_data` (0x07) packet. A consumer can prepend the packet id and a VarInt length and send the bytes as they are, without parsing the NBT itself.
 
-| Bölüm | Tip | Açıklama |
-|---|---|---|
-| `registry_id` | String | VarInt uzunluk + UTF-8; tam path, örn. `minecraft:worldgen/biome` |
-| `entry_count` | VarInt | Takip eden entry sayısı |
-| `id` | String | Entry kimliği; VarInt uzunluk + UTF-8 |
-| `has_nbt` | Bool | `0x00` veya `0x01`; builtin kayıtlarda `0x00` |
-| `NBT` | bytes | Yalnızca `has_nbt=1` ise; entry codec'inin ham, isimsiz NBT'si |
+| Part | Type | Description |
+| --- | --- | --- |
+| `registry_id` | String | VarInt length + UTF-8; the full path, for example `minecraft:worldgen/biome` |
+| `entry_count` | VarInt | Number of entries that follow |
+| `id` | String | Entry id; VarInt length + UTF-8 |
+| `has_nbt` | Bool | `0x00` or `0x01`; `0x00` for built-in registry entries |
+| `NBT` | bytes | Only when `has_nbt=1`: the entry codec's raw, unnamed NBT |
 
-Kurallar:
+Rules:
 
-- Dosya gzip/zlib değildir ve başında compound sarmalayıcı yoktur. İlk bayt `registry_id` uzunluğunun VarInt'idir.
-- Entry'ler `protocol_id` değerine göre artan sırada yazılır: `0, 1, 2, ...`. Client bu sırayı bekler.
-- `has_nbt=0` ise entry'de NBT alanı hiç yoktur; yalnızca `id` ve `has_nbt` bulunur.
-- Dosya sonunda trailing byte yoktur. `entry_count`, çözülen entry sayısıyla birebir eşleşir.
-- Registry ID kısaltılmaz: `minecraft:biome` değil, `minecraft:worldgen/biome` yazılır.
+- The file is not gzip/zlib compressed and has no outer compound wrapper. The first byte is the VarInt length of `registry_id`.
+- Entries are written in ascending `protocol_id` order (`0, 1, 2, ...`), which is the order a client expects.
+- When `has_nbt=0` the entry has no NBT member at all: only `id` and `has_nbt`.
+- There is no trailing byte; `entry_count` matches the number of decoded entries exactly.
+- The registry id is never shortened: `minecraft:worldgen/biome`, not `minecraft:biome`.
 
 ### `tags/all.nbt` — `update_tags` (0x0E)
 
 ```text
 [registry_count: VarInt]
-[her registry için]
+[for each registry]
   [registry_id: String]
   [tag_count: VarInt]
-  [her tag için]
+  [for each tag]
     [tag_name: String]
     [entry_count: VarInt]
-    [her entry için: VarInt]   # registry içindeki protocol_id
+    [for each entry: VarInt]   # protocol id inside the registry
 ```
 
-Registry ve tag adları alfabetik, entry'ler protocol ID artan sırada yazılır. Yalnızca dolu tag'ler (`entry_count > 0`) payload'a girer; yalnızca boş tag taşıyan registry grupları da atlanır. Böylece JSON'daki 20 registry grubuna karşılık wire'da 19 dolu registry, aynı **20.156** üyelik bulunur.
+Registry and tag names are alphabetical and entries are in ascending protocol id order. Only non-empty tags (`entry_count > 0`) enter the payload, and a registry group that holds only empty tags is skipped as well. `tags/client_tags.bin` is the same payload restricted to the registries a vanilla client expects, in the order configured in `config/versions/<version>/tag_registries.json`.
 
-### Tier 2 ve komut ağacı
+### Counted streams and the command tree
 
-`recipes/minecraft.nbt`, `loot/minecraft.nbt` ve `advancements/minecraft.nbt` aynı counted akışı kullanır:
+`recipes/minecraft.nbt`, `loot/minecraft.nbt` and `advancements/minecraft.nbt` share one counted layout:
 
 ```text
 [count: VarInt]
-[her entry için]
+[for each entry]
   [id: String]
   [NBT: bytes]
 ```
 
-`commands/tree.nbt` tek command-tree NBT'sini `[nbt_length: VarInt][NBT: bytes]` olarak taşır. Bu tek dosyada uzunluk çerçevesi vardır; çünkü NBT compound'ının kendi ilk baytı `0A`'dır ve dosyanın ilk baytının `0A` olmaması gerekir. Diğer tüm `.nbt` dosyaları doğrudan paket payload'ıdır ve ek çerçeve taşımaz.
+`commands/tree.nbt` carries the single command-tree NBT as `[nbt_length: VarInt][NBT: bytes]`. It is the only framed `.nbt` file: an NBT compound starts with `0A`, and a file whose first byte is not `0A` is never mistaken for a bare payload. Every other `.nbt` file is a packet payload and carries no extra framing.
 
 ### Hex dump
 
-Örnek: `registries/nbt/minecraft/dimension_type.nbt` (ilk 48 byte)
+Example: `registries/nbt/minecraft/dimension_type.nbt` (first 48 bytes)
 
 ```text
 18 6D 69 6E 65 63 72 61 66 74 3A 64 69 6D 65 6E 73 69 6F 6E 5F 74 79 70 65 04 13 6D 69 6E 65 63 72 61 66 74 3A 6F 76 65 72 77 6F 72 6C 64 01 0A
 ```
 
-- `18`: `registry_id` uzunluğu, 24 byte.
-- `6D 69 6E 65 63 72 61 66 74 3A 64 69 6D 65 6E 73 69 6F 6E 5F 74 79 70 65`: `minecraft:dimension_type`.
-- `04`: `entry_count = 4`.
-- `13`: ilk entry ID'sinin uzunluğu, 19 byte.
-- `6D 69 6E 65 63 72 61 66 74 3A 6F 76 65 72 77 6F 72 6C 64`: `minecraft:overworld`.
-- `01`: `has_nbt = true`.
-- `0A`: entry NBT'sinin compound başlangıcı. Bu, dosya sarmalayıcısı değil, entry payload'ının kendi köküdür.
+In order: the VarInt length of `registry_id`, the registry id itself, the `entry_count` VarInt, then for each entry its id length, its id, the `has_nbt` flag and, when the flag is set, the `0A` compound root of the entry NBT. That last `0A` belongs to the entry payload, not to a file wrapper.
 
-### Raw NBT modu (`--nbt-format raw` veya `both`)
+### Raw NBT mode (`--nbt-format raw` or `both`)
 
-`--nbt-format wire` varsayılandır ve yukarıdaki packet payload'larını değiştirmeden yazar. `raw`,
-her entry'yi kendi çerçevesiz `.nbt` dosyasına ayırır; `both` iki temsili birlikte üretir.
+`--nbt-format wire` is the default and writes the packet payloads above unchanged. `raw` splits every entry into its own unframed `.nbt` file; `both` writes both representations from the same in-memory payloads.
 
-- Registry: `registries/raw/<namespace>/<path>/manifest.json` doğrudan entry id haritasıdır; her
-  değer `protocol_id` ve manifest dizinine göre `file` taşır. Builtin entry'lerde NBT olmadığı için
-  `file` null'dır.
-- `tags/raw/manifest.json`, `recipes/raw/manifest.json`, `loot/raw/manifest.json`,
-  `advancements/raw/manifest.json` ve `commands/raw/manifest.json` aynı yaklaşımı kullanır. Tag
-  dosyaları `registry`, `id`, `replace`, `values` ve `protocol_ids` alanlı compound NBT'dir;
-  böylece wire'ın atladığı boş tag'ler de korunur.
-- Raw dosyalarda length prefix, gzip header veya dış compound sarmalayıcı yoktur. Compound entry
-  doğrudan kendi `0A` type byte'ıyla başlar.
-- Testler her manifesti ve her raw NBT dosyasını okur; registry'lerde `has_nbt` ile `file`
-  varlığını wire payload'a karşı doğrular. `both` modunda 160 wire NBT dosyasının byte'ları
-  varsayılan wire çıktısıyla aynı kalır.
+- Registries: `registries/raw/<namespace>/<path>/manifest.json` is a direct entry id map; each value carries `protocol_id` and a `file` relative to the manifest directory. Built-in entries have no NBT, so their `file` is null.
+- `tags/raw/manifest.json`, `recipes/raw/manifest.json`, `loot/raw/manifest.json`, `advancements/raw/manifest.json` and `commands/raw/manifest.json` follow the same principle. Tag files are self-describing compounds with `registry`, `id`, `replace`, `values` and `protocol_ids`, so empty tags the wire format skips are still preserved.
+- Raw files carry no length prefix, gzip header or outer compound wrapper: a compound entry starts directly with its own `0A` type byte.
+- The tests parse every manifest and every raw NBT file and check registry `has_nbt` against the presence of `file` and against the decoded wire payload.
 
-## Test envanteri
+## Known limits
 
-Tam paket **242 test** çalıştırdı; **0 hata** ve **2 skip** var. Testler yalnızca "çalıştı" demiyor; aşağıdaki sınıflar şema, canlı oyun karşılaştırması, golden digest, kilit, transaction ve CLI sözleşmelerini ayrı ayrı kontrol ediyor.
+1. **The golden digest is not an independent source of truth.** If the same mistake exists in the extractor and in the golden baseline, the test still passes.
+2. **The schema pass covers every generated document, not the mirrored asset JSON.** Assets are checked for parseability and hash integrity, not for a semantic schema.
+3. **Not every field has an independent semantic test.** The command tree, the JSON-RPC surface and some derived documents are protected by schema and golden digest only.
+4. **The output is version bound.** Every document describes the Minecraft version recorded in `_meta.json`; the same results must not be assumed for another version.
+5. **Locking was verified on a local file system and across separate JVMs.** Network file systems (NFS/SMB) were not tested.
+6. **Packet byte formats are not exact for every field.** `wire_type` is authoritative only where a `ByteBufCodecs` constant matched; custom codecs are marked `codec_defined`, and the field list of a non-record class can include flags derived from the codec.
+7. **NBT bytes depend on the game codecs.** Registry, tag and tier-2 payloads are encoded by the game's own `STREAM_CODEC`/`NbtOps` and pinned by the golden digest; they are not cross-checked against an independent parser.
+8. **Creative tab and villager trade catalogs are not curated documents.** Both are present as registry payloads in `registries/dump/`.
 
-| Test sınıfı | Test | Hata | Skip | Süre |
-|---|---|---|---|---|
-| `com.terila.extractor.bootstrap.StandaloneExtractorTest` | 9 | 0 | 0 | 2.59 s |
-| `com.terila.extractor.ClientTagsArtifactTest` | 6 | 0 | 2 | 45.45 s |
-| `com.terila.extractor.core.DocumentSchemasTest` | 9 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.core.ExtractionRunnerTest` | 4 | 0 | 0 | 0.26 s |
-| `com.terila.extractor.core.FunctionTagGraphTest` | 4 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.core.InputLocatorTest` | 9 | 0 | 0 | 0.33 s |
-| `com.terila.extractor.core.OutputDirectoryManagerTest` | 2 | 0 | 0 | 0.17 s |
-| `com.terila.extractor.core.OutputLockTest` | 7 | 0 | 0 | 1.22 s |
-| `com.terila.extractor.core.OutputTransactionTest` | 3 | 0 | 0 | 0.03 s |
-| `com.terila.extractor.core.OutputValidatorTest` | 10 | 0 | 0 | 0.05 s |
-| `com.terila.extractor.core.ReportReaderTest` | 5 | 0 | 0 | 0.04 s |
-| `com.terila.extractor.core.SchemaValidatorTest` | 12 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.ExtractionIntegrationTest` | 35 | 0 | 0 | 9.92 s |
-| `com.terila.extractor.extractors.assets.ClientAssetExtractorTest` | 2 | 0 | 0 | 0.00 s |
-| `com.terila.extractor.extractors.blocks.BlockExtractorTest` | 12 | 0 | 0 | 0.79 s |
-| `com.terila.extractor.extractors.entities.EntityMetadataExtractorTest` | 7 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.extractors.functions.FunctionCallGraphTest` | 3 | 0 | 0 | 0.00 s |
-| `com.terila.extractor.extractors.functions.FunctionCallParserTest` | 5 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.extractors.functions.FunctionExtractionTest` | 7 | 0 | 0 | 1.82 s |
-| `com.terila.extractor.extractors.items.ItemExtractorTest` | 16 | 0 | 0 | 2.55 s |
-| `com.terila.extractor.extractors.NameResolutionTest` | 6 | 0 | 0 | 0.28 s |
-| `com.terila.extractor.extractors.recipes.RecipeExtractorTest` | 5 | 0 | 0 | 0.04 s |
-| `com.terila.extractor.extractors.registry.AllRegistriesExtractorTest` | 7 | 0 | 0 | 0.18 s |
-| `com.terila.extractor.extractors.registry.RegistryCodecsTest` | 3 | 0 | 0 | 0.78 s |
-| `com.terila.extractor.extractors.structures.StructureTemplateExtractorTest` | 18 | 0 | 0 | 0.01 s |
-| `com.terila.extractor.extractors.tags.AllTagsExtractorTest` | 5 | 0 | 0 | 0.09 s |
-| `com.terila.extractor.extractors.tags.EffectiveFunctionTagExtractorTest` | 3 | 0 | 0 | 0.85 s |
-| `com.terila.extractor.extractors.translations.TranslationExtractorTest` | 4 | 0 | 0 | 1.53 s |
-| `com.terila.extractor.GoldenOutputTest` | 7 | 0 | 0 | 6.73 s |
-| `com.terila.extractor.RawNbtIntegrationTest` | 7 | 0 | 0 | 79.71 s |
-| `com.terila.extractor.util.StringUtilTest` | 3 | 0 | 0 | 0.00 s |
-| `com.terila.extractor.WireFormatIntegrationTest` | 7 | 0 | 0 | 1.32 s |
+See the [README](README.md#verification) for how the output is verified and what the test suite guarantees.
 
-### Testlerin kapsadığı güvenceler
-
-- **Şema:** Her üretilen belge, yoluna karşılık gelen şemaya göre doğrulanıyor; `3,220/3,220` geçti.
-- **Canlı oyun karşılaştırması:** Blok state ID'leri, recipe sayısı, item/block registry'leri, packet ID'leri, yapı palette'leri, item component default'ları ve yeni game rule/potion katalogları doğrudan 26.3 runtime'ıyla karşılaştırılıyor.
-- **Golden digest:** Tek tek belgeler, büyük ağaçlar ve tüm `.nbt` dosyaları SHA-256 ile sabitleniyor; JSON belgelerinde timestamp, süre, rapor hash'i ve mutlak yollar hariç.
-- **Tam JSON:** 10,552 JSON dosyasının tamamı parse edilebilir.
-- **NBT:** 160 NBT dosyasının tamamı byte seviyesinde doğrulanıyor: gzip/`0A` sarmalayıcı yok, registry ID tam path, `entry_count` ve entry sayısı eşit, entry sırası protocol ID artan, trailing byte yok. Registry ve tag payload'ları oyunun kendi codec'leriyle decode ediliyor; `commands/tree.nbt` çerçevesi ve 155 registry ayrıca kontrol ediliyor.
-- **Operasyon:** staging/transactional yayın, kilit, owner bilgisi, hata durumunda önceki çıktıyı koruma ve CLI çıkış kodları test ediliyor.
-- **Yeni kapsam:** Oyun kuralları, potion effect'leri ve ters tag indeksi ayrı testlerle doğrulanıyor. Packet yapıları; tüm 260 occurrence'ın sınıf eşleşmesini, 234 sınıfı, 592 alanı, `login`/`add_entity`/`custom_payload` örneklerini ve `bundle_delimiter` istisnasını doğruluyor.
-
-## Güvenilirlik değerlendirmesi
-
-| Alan | Seviye | Gerekçe |
-|---|---|---|
-| Kapsam ve bütünlük | **Çok yüksek** | 155 registry, 119 extractor, 235 packet yapısı, 155 NBT registry, 1.511 yapı şablonu, tüm tag'ler ve 7.331 asset |
-| Şema/format | **Çok yüksek** | 3,220/3,220 şema doğrulaması; 10,552 JSON parse; 0 hata/uyarı |
-| Oyun verisiyle uyum | **Yüksek** | Kritik tablolar canlı 26.3 registry ve data generator raporlarıyla karşılaştırılıyor |
-| Determinizm | **Çok yüksek** | Golden digest tüm belgeleri ve büyük ağaçları kapsıyor; volatil alanlar hariç |
-| Anlamsal doğruluk | **Yüksek** | Birçok alan canlı oyunla doğrulanıyor; ancak her alan bağımsız bir dış kaynakla karşılaştırılmıyor |
-| Bağımsız doğrulama | **Orta** | Golden dosyası aynı extractor'ın çıktısından üretiliyor; dış/oracle karşılaştırması yok |
-| Asset bütünlüğü | **Yüksek** | JSON asset'ler aynalanıyor; binary asset'ler SHA-256 manifestiyle listeleniyor |
-| Asset şema doğrulaması | **Orta** | Mirror edilen asset JSON'ları Minecraft'ın kendi formatında; extractor şemasıyla doğrulanmıyor |
-
-**Genel değerlendirme:** Veri keşfi, katalog, tooling ve otomasyon için **yüksek güvenilir**. "Resmî Minecraft verisi" veya "her alanı bağımsız doğrulanmış" muamelesi yapılmamalı. Kritik oyun mekaniği kararları için ilgili alanlar ayrıca spot-check edilmeli.
-
-## Bilinen sınırlar
-
-1. **Golden digest bağımsız doğruluk kaynağı değil.** Aynı hata extractor'da ve golden baseline'da varsa test geçebilir.
-2. **3,220 şema doğrulaması, mirror edilen asset JSON'larını kapsamıyor.** Asset'lerde parse ve hash bütünlüğü var; anlamsal şema doğrulaması yok.
-3. **Her alan için bağımsız semantik test yok.** Özellikle komut ağacı, JSON-RPC ve bazı türetilmiş belgeler şema + golden ile korunuyor.
-4. **Sürüm bağımlılığı.** Çıktı Minecraft 26.3 içindir; başka sürümlerde aynı sonuçlar varsayılmamalı.
-5. **Ağ dosya sistemi.** Kilit davranışı yerel dosya sisteminde ve ayrı JVM'de test edildi; NFS/SMB davranışı ayrıca doğrulanmadı.
-6. **Creative tab ve villager trade katalogları** bu turda küratörlü belge olarak eklenmedi; registry dump'larında payload olarak bulunuyorlar.
-7. **Paket byte formatı her alanda birebir değil.** `wire_type` yalnızca `ByteBufCodecs` sabiti eşleştiğinde kesindir; özel codec'ler `codec_defined` olarak işaretlenir. Record olmayan sınıflarda alan listesi codec'te türetilmiş bayrakları da içerebilir.
-8. **NBT byte'ları oyun codec'lerine bağlı.** Registry, tag ve tier-2 payload'ları oyunun kendi `STREAM_CODEC`/`NbtOps` üretimiyle encode ediliyor ve golden digest ile sabitleniyor; bağımsız bir C++ parser'a karşı çalıştırılmıyor.
-
-## Yeniden üretim ve doğrulama
+## Reproducing this catalog
 
 ```bash
-# Tam çıktı
+# the extraction itself
 ./gradlew runExtractor
 
-# Testler + Javadoc
-./gradlew test javadoc
-
-# Sadece golden digest'i bilinçli olarak yenile
-./gradlew test --tests 'com.terila.extractor.GoldenOutputTest' -Dterila.golden.update=true
+# rebuild this catalog from that output
+./gradlew generateOutputCatalog
 ```
 
-Çıktı konumu: `build/extractor_output`.
+Output location: `build/extractor_output`. The catalog is assembled from `_meta.json`, `_errors.json`, `_validation.json` and the per-category documents, so it can only be regenerated after a real run.
 
-## Ek: tam dosya listesi
+## Appendix: full file list
 
 <details>
-<summary><strong>10,713 dosyanın tamamını göster</strong></summary>
+<summary><strong>Show all 10,713 files</strong></summary>
 
 ```text
 _errors.json
@@ -10534,6 +10455,7 @@ structures/templates/minecraft/trial_chambers/chamber/addon/lower_staircase_down
 structures/templates/minecraft/trial_chambers/chamber/addon/short_grate_platform.json
 structures/templates/minecraft/trial_chambers/chamber/addon/short_platform.json
 structures/templates/minecraft/trial_chambers/chamber/addon/walkway_with_bridge_1.json
+structures/templates/minecraft/trial_chambers/chamber/assembly.json
 structures/templates/minecraft/trial_chambers/chamber/assembly/cover_1.json
 structures/templates/minecraft/trial_chambers/chamber/assembly/cover_2.json
 structures/templates/minecraft/trial_chambers/chamber/assembly/cover_3.json
@@ -10555,12 +10477,12 @@ structures/templates/minecraft/trial_chambers/chamber/assembly/right_staircase_1
 structures/templates/minecraft/trial_chambers/chamber/assembly/right_staircase_2.json
 structures/templates/minecraft/trial_chambers/chamber/assembly/right_staircase_3.json
 structures/templates/minecraft/trial_chambers/chamber/assembly/spawner_1.json
-structures/templates/minecraft/trial_chambers/chamber/assembly.json
 structures/templates/minecraft/trial_chambers/chamber/chamber_1.json
 structures/templates/minecraft/trial_chambers/chamber/chamber_2.json
 structures/templates/minecraft/trial_chambers/chamber/chamber_4.json
 structures/templates/minecraft/trial_chambers/chamber/chamber_8.json
 structures/templates/minecraft/trial_chambers/chamber/entrance_cap.json
+structures/templates/minecraft/trial_chambers/chamber/eruption.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/breeze_slice_1.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/center_1.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/quadrant_1.json
@@ -10571,7 +10493,7 @@ structures/templates/minecraft/trial_chambers/chamber/eruption/quadrant_5.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/slice_1.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/slice_2.json
 structures/templates/minecraft/trial_chambers/chamber/eruption/slice_3.json
-structures/templates/minecraft/trial_chambers/chamber/eruption.json
+structures/templates/minecraft/trial_chambers/chamber/pedestal.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/center_1.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/ominous_slice_1.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/quadrant_1.json
@@ -10582,7 +10504,7 @@ structures/templates/minecraft/trial_chambers/chamber/pedestal/slice_2.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/slice_3.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/slice_4.json
 structures/templates/minecraft/trial_chambers/chamber/pedestal/slice_5.json
-structures/templates/minecraft/trial_chambers/chamber/pedestal.json
+structures/templates/minecraft/trial_chambers/chamber/slanted.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/center.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/hallway_1.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/hallway_2.json
@@ -10596,7 +10518,6 @@ structures/templates/minecraft/trial_chambers/chamber/slanted/ramp_1.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/ramp_2.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/ramp_3.json
 structures/templates/minecraft/trial_chambers/chamber/slanted/ramp_4.json
-structures/templates/minecraft/trial_chambers/chamber/slanted.json
 structures/templates/minecraft/trial_chambers/chests/connectors/supply.json
 structures/templates/minecraft/trial_chambers/chests/supply.json
 structures/templates/minecraft/trial_chambers/corridor/addon/arrow_dispenser.json
@@ -11333,6 +11254,7 @@ tags/items.json
 tags/villager_trades.json
 translations/en_us.json
 translations/keys.json
+translations/locales.json
 translations/locales/af_za.json
 translations/locales/ar_sa.json
 translations/locales/ast_es.json
@@ -11476,7 +11398,6 @@ translations/locales/zh_cn.json
 translations/locales/zh_hk.json
 translations/locales/zh_tw.json
 translations/locales/zlm_arab.json
-translations/locales.json
 trims/materials.json
 trims/patterns.json
 worldgen/biome_parameters.json

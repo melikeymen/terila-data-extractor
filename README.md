@@ -2,6 +2,7 @@
 
 ![Static Badge](https://img.shields.io/badge/version-26.3-green)
 ![AI-assisted](https://img.shields.io/badge/AI--assisted-heavy-blue)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 
 Extracts the **complete** Minecraft data set — every registry, every data pack file, every structure
 template, every protocol table and the whole resource pack — into JSON consumed by the Terila server.
@@ -271,11 +272,36 @@ that has no tags. At run time the extractor also asks the game's own
 failure: the capture stays the source of truth, because a capture can carry a registry this
 extractor has no tag binding for.
 
+## Output catalog
+
+[OUTPUT_CATALOG.md](OUTPUT_CATALOG.md) is the generated, English catalog of a complete run: the file
+and size census per category, coverage details, every packet structure, the extractor and registry
+inventories, the NBT wire formats and the full file list. It is never edited by hand:
+
+```bash
+./gradlew runExtractor            # produce the data
+./gradlew generateOutputCatalog   # rewrite OUTPUT_CATALOG.md from it
+```
+
+The versioned hook in `.githooks/pre-commit` regenerates the catalog and stages it before every
+commit, so extracted data and its catalog always travel together. `./gradlew installGitHooks`
+installs it (the `build` task does this too); without an extraction in `build/extractor_output` the
+hook leaves the committed catalog untouched.
+
+## Contributing
+
+Contributions are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) covers the build, test and
+data-regeneration workflow, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) the community expectations,
+and [SECURITY.md](SECURITY.md) how to report a security problem privately.
+
 ## License
 
-This project is licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE).
-Minecraft itself, its data packs, client assets and language files remain subject to Mojang's
-terms; this repository only contains the extractor and generated output.
+This project is licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE) for the
+full text. Unless you state otherwise, any contribution you submit is licensed under the same terms.
+
+This is an unofficial project. It is not affiliated with, endorsed by or supported by Mojang Studios
+or Microsoft. Minecraft itself, its data packs, client assets and language files remain subject to
+Mojang's terms; this repository only contains the extractor and its generated output.
 
 ## Requirements
 

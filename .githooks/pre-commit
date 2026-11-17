@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Rebuilds OUTPUT_CATALOG.md from the most recent extraction before every commit.
+#
+# The catalog is a checked-in, generated document: a commit that changes what the extractor writes
+# has to carry the catalog that describes it. `./gradlew installGitHooks` installs this hook from
+# .githooks (the build also installs it), so the file in the repository is the one that runs.
+#
+# Without an extraction in build/extractor_output there is nothing to describe, so the committed
+# catalog is left untouched instead of being replaced with an empty one.
+
+set -e
+
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+cd "$root"
+
+if [ ! -f build/extractor_output/_meta.json ]; then
+    echo "pre-commit: no extraction in build/extractor_output; OUTPUT_CATALOG.md left unchanged."
+    echo "pre-commit: run ./gradlew runExtractor, then ./gradlew generateOutputCatalog, to refresh it."
+    exit 0
+fi
+
+./gradlew -q generateOutputCatalog
+
+if ! git diff --quiet -- OUTPUT_CATALOG.md; then
+    git add OUTPUT_CATALOG.md
+    echo "pre-commit: regenerated OUTPUT_CATALOG.md from build/extractor_output and staged it."
+fi

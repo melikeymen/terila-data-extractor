@@ -1,0 +1,664 @@
+import groovy.json.JsonSlurper
+
+/*
+ * Generates OUTPUT_CATALOG.md: the English, data-driven catalog of everything a run writes into
+ * build/extractor_output.
+ *
+ * The catalog is a checked-in document, so it is not maintained by hand. `./gradlew
+ * generateOutputCatalog` rebuilds it from the last real extraction, and the versioned pre-commit
+ * hook (.githooks/pre-commit, installed by `./gradlew installGitHooks`) rebuilds and stages it
+ * before every commit. When there is no extraction to read, both leave the committed file alone
+ * instead of writing an empty catalog over it.
+ *
+ * Every number, table row and file name in the document is derived from the output itself. Only the
+ * folder descriptions, the format notes and the known-limits list are static text.
+ */
+
+def catalogOutputDir = file(
+    project.findProperty('terila.catalog.dir')
+        ?: layout.buildDirectory.dir('extractor_output').get().asFile.path
+)
+def catalogFile = new File(rootDir, 'OUTPUT_CATALOG.md')
+
+// ---------------------------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------------------------
+
+def readJson = { File file ->
+    if (!file.isFile()) {
+        return null
+    }
+    return new JsonSlurper().parse(file, 'UTF-8')
+}
+
+def asLong = { Object value -> value instanceof Number ? ((Number) value).longValue() : 0L }
+
+def asText = { Object value -> value == null ? null : value.toString() }
+
+def count = { Object value -> String.format(Locale.ROOT, '%,d', asLong(value)) }
+
+def size = { long value ->
+    if (value >= (1L << 30)) {
+        return String.format(Locale.ROOT, '%.2f GiB', value / (double) (1L << 30))
+    }
+    if (value >= (1L << 20)) {
+        return String.format(Locale.ROOT, '%.1f MiB', value / (double) (1L << 20))
+    }
+    if (value >= (1L << 10)) {
+        return String.format(Locale.ROOT, '%.1f KiB', value / (double) (1L << 10))
+    }
+    return "${value} B"
+}
+
+/** Recursive file/size census of one directory, split by the two file kinds worth reporting. */
+def census = { File directory ->
+    long files = 0L
+    long total = 0L
+    long jsonFiles = 0L
+    long nbtFiles = 0L
+    if (directory?.isDirectory()) {
+        directory.eachFileRecurse { File file ->
+            if (file.isFile()) {
+                files++
+                total += file.length()
+                def name = file.name.toLowerCase(Locale.ROOT)
+                if (name.endsWith('.json')) {
+                    jsonFiles++
+                }
+                if (name.endsWith('.nbt')) {
+                    nbtFiles++
+                }
+            }
+        }
+    }
+    return [files: files, bytes: total, json: jsonFiles, nbt: nbtFiles]
+}
+
+def mdTable = { List<String> header, List<String> align, List<List<String>> rows ->
+    def builder = new StringBuilder()
+    builder.append('| ').append(header.join(' | ')).append(' |\n')
+    builder.append('| ').append(align.join(' | ')).append(' |\n')
+    rows.each { List<String> row ->
+        builder.append('| ').append(row.join(' | ')).append(' |\n')
+    }
+    return builder.toString()
+}
+
+def quote = { Object value -> value == null ? '—' : '`' + value.toString() + '`' }
+
+// ---------------------------------------------------------------------------------------------
+// Static text: folder descriptions, format notes, known limits
+// ---------------------------------------------------------------------------------------------
+
+def folderDescriptions = [
+    advancements  : 'Every advancement definition; JSON catalog plus a counted id + NBT wire stream.',
+    assets        : 'Client jar resource pack mirror; JSON assets, index and the binary manifest.',
+    blocks        : 'Block catalog, properties, materials, sounds, shapes, the state id table, one state document per block and the block entity mapping.',
+    commands      : 'Live command tree JSON, the game\'s own command report and the framed NBT tree.',
+    damage_types  : 'Damage type definitions.',
+    enchantments  : 'Enchantment definitions and their effect components.',
+    entities      : 'Entity catalog, attribute table, metadata types and pose list.',
+    functions     : 'Vanilla function sources; 26.3 ships none, so an annotated empty document.',
+    gameplay      : 'Game rule and potion/effect catalogs.',
+    item_modifiers: 'Item modifier definitions; vanilla ships none, so an annotated empty document.',
+    items         : 'Item catalog, component maps, food, tools and enchantability documents.',
+    loot          : 'Loot tables, the per-block loot index and a counted id + NBT wire stream.',
+    misc          : 'Remaining registry kinds, variants, dialogs, and the stat/command argument/position source vocabularies.',
+    packets       : 'Packet id table per connection state and direction, plus the packet payload structures.',
+    predicates    : 'Predicate definitions.',
+    protocol      : 'Version/protocol summary, feature flags, known packs and the JSON-RPC surface.',
+    recipes       : 'Every recipe definition, its type groups and a counted id + NBT wire stream.',
+    registries    : 'Registry manifest, one dump per registry, each registry\'s direct registry_data wire payload, the game report and the data pack formats.',
+    structures    : 'Structure index and the resolved JSON of every NBT template.',
+    tags          : 'Curated tag documents, the all-registry tag sweep, the inverse membership index and the raw update_tags wire payload.',
+    translations   : 'Language tables, the key inventory, the locale manifest and one document per locale.',
+    trims         : 'Trim material and trim pattern definitions.',
+    worldgen      : 'Biome, feature, structure, density function and other world generation documents.'
+]
+
+def knownLimits = [
+    '**The golden digest is not an independent source of truth.** If the same mistake exists in the extractor and in the golden baseline, the test still passes.',
+    '**The schema pass covers every generated document, not the mirrored asset JSON.** Assets are checked for parseability and hash integrity, not for a semantic schema.',
+    '**Not every field has an independent semantic test.** The command tree, the JSON-RPC surface and some derived documents are protected by schema and golden digest only.',
+    '**The output is version bound.** Every document describes the Minecraft version recorded in `_meta.json`; the same results must not be assumed for another version.',
+    '**Locking was verified on a local file system and across separate JVMs.** Network file systems (NFS/SMB) were not tested.',
+    '**Packet byte formats are not exact for every field.** `wire_type` is authoritative only where a `ByteBufCodecs` constant matched; custom codecs are marked `codec_defined`, and the field list of a non-record class can include flags derived from the codec.',
+    '**NBT bytes depend on the game codecs.** Registry, tag and tier-2 payloads are encoded by the game\'s own `STREAM_CODEC`/`NbtOps` and pinned by the golden digest; they are not cross-checked against an independent parser.',
+    '**Creative tab and villager trade catalogs are not curated documents.** Both are present as registry payloads in `registries/dump/`.'
+]
+
+// ---------------------------------------------------------------------------------------------
+// Rendering
+// ---------------------------------------------------------------------------------------------
+
+def renderCatalog = { File dir ->
+    def meta = readJson(new File(dir, '_meta.json'))
+    def errors = readJson(new File(dir, '_errors.json'))
+    def validation = readJson(new File(dir, '_validation.json'))
+    def packetsDoc = readJson(new File(dir, 'packets/structures.json'))
+    def blockEntities = readJson(new File(dir, 'blocks/block_entities.json'))
+    def blockStateIds = readJson(new File(dir, 'blocks/state_ids.json'))
+    def itemsDoc = readJson(new File(dir, 'items/minecraft.json'))
+    def itemDefaults = readJson(new File(dir, 'items/component_defaults.json'))
+    def registryIndex = readJson(new File(dir, 'registries/index.json'))
+    def structureIndex = readJson(new File(dir, 'structures/index.json'))
+    def allTags = readJson(new File(dir, 'tags/all.json'))
+    def tagsByEntry = readJson(new File(dir, 'tags/by_entry.json'))
+    def locales = readJson(new File(dir, 'translations/locales.json'))
+    def assetsIndex = readJson(new File(dir, 'assets/index.json'))
+    def gameRules = readJson(new File(dir, 'gameplay/game_rules.json'))
+    def potions = readJson(new File(dir, 'gameplay/potions.json'))
+    def featureFlags = readJson(new File(dir, 'protocol/feature_flags.json'))
+    def knownPacks = readJson(new File(dir, 'protocol/known_packs.json'))
+    def jsonRpc = readJson(new File(dir, 'protocol/json_rpc.json'))
+
+    // --- file census -------------------------------------------------------------------------
+
+    def rootFileList = (dir.listFiles() ?: new File[0]).findAll { it.isFile() }.sort { it.name }
+    long rootBytes = rootFileList.sum(0L) { it.length() } ?: 0L
+    def directories = (dir.listFiles() ?: new File[0])
+        .findAll { it.isDirectory() }
+        .sort { it.name }
+    def censusByDir = directories.collectEntries { [(it.name): census(it)] }
+
+    long totalFiles = rootFileList.size() + censusByDir.values().sum(0L) { it.files }
+    long totalBytes = rootBytes + censusByDir.values().sum(0L) { it.bytes }
+    long totalJson = rootFileList.count { it.name.toLowerCase(Locale.ROOT).endsWith('.json') } +
+        censusByDir.values().sum(0L) { it.json }
+    long totalNbt = censusByDir.values().sum(0L) { it.nbt }
+
+    def registryNbtDir = new File(dir, 'registries/nbt')
+    long registryNbtFiles = census(registryNbtDir).nbt
+
+    def out = new StringBuilder()
+
+    // --- header --------------------------------------------------------------------------------
+
+    def generatedAt = asText(meta?.generated_at)
+    def runSeconds = String.format(Locale.ROOT, '%.1f s', asLong(meta?.duration_ms) / 1000.0)
+    def reportStamp = generatedAt == null ? 'unknown' : generatedAt.replace('T', ' ').replace('Z', ' UTC')
+
+    out << '# Terila Data Extractor — Output Catalog\n\n'
+    out << '> Generated from the real extraction output under `build/extractor_output` by ' +
+        '`./gradlew generateOutputCatalog`.\n'
+    out << "> Last extraction: **${reportStamp}** · run time **${runSeconds}** · extractor " +
+        "**${asText(meta?.extractor_version) ?: 'unknown'}**\n"
+    out << '>\n'
+    out << "> Target: **Minecraft ${asText(meta?.minecraft_version) ?: 'unknown'}** · protocol " +
+        "**${asText(meta?.protocol_version) ?: 'unknown'}** · data pack " +
+        "**${asText(meta?.data_pack_version) ?: 'unknown'}** · world version " +
+        "**${asText(meta?.world_version) ?: 'unknown'}**\n\n"
+    out << '> This file is generated; do not edit it by hand. The pre-commit hook rebuilds it from ' +
+        'the output before every commit, so a change to the extracted data and the catalog that ' +
+        'describes it land in the same commit. See [CONTRIBUTING.md](CONTRIBUTING.md).\n\n'
+
+    // --- summary -------------------------------------------------------------------------------
+
+    def validationSummary = validation?.summary
+    def schemaCount = validation?.schemas?.count
+    def errorRows = (errors?.errors ?: [])?.size() ?: 0
+    def warningRows = (errors?.warnings ?: [])?.size() ?: 0
+    def packetStructures = asLong(packetsDoc?.structure_count)
+    def packetFields = asLong(packetsDoc?.field_count)
+
+    def summaryRows = [
+        ['Successful extractors',
+         "${count(meta?.successful_extractors)} / ${count(meta?.total_extractors)}"],
+        ['Reported entries', count(meta?.total_entries)],
+        ['Output files', count(totalFiles)],
+        ['JSON documents', count(totalJson)],
+        ['NBT payloads', count(totalNbt)],
+        ['NBT registries', count(registryIndex?.nbt_registry_count ?: registryNbtFiles)],
+        ['Packet structures', count(packetStructures)],
+        ['Packet fields', count(packetFields)],
+        ['Total output size', size(totalBytes)],
+        ['Schema validation',
+         "${count(validationSummary?.validated)} / ${count(validationSummary?.documents)}"],
+        ['Schema definitions', count(schemaCount)],
+        ['Errors / warnings', "${count(errorRows)} / ${count(warningRows)}"]
+    ]
+    out << '## Summary\n\n'
+    out << mdTable(['Measure', 'Value'], ['---', '---:'], summaryRows)
+    out << '\n'
+
+    // --- coverage note -------------------------------------------------------------------------
+
+    def coverage = []
+    if (tagsByEntry != null) {
+        coverage << "`tags/by_entry.json` is a separate side output and is not added to the " +
+            "`_meta.total_entries` counter; it holds **${count(tagsByEntry.entry_count)}** tagged " +
+            "entries and **${count(tagsByEntry.membership_count)}** tag memberships."
+    }
+    if (gameRules != null || potions != null) {
+        def sentence = []
+        if (gameRules != null) {
+            sentence << "**${count(gameRules.rule_count)}** rules"
+        }
+        if (potions != null) {
+            sentence << "**${count(potions.potion_count)}** potions with " +
+                "**${count(potions.total_effect_count)}** effects"
+        }
+        coverage << "`gameplay/` documents ${sentence.join(' and ')}."
+    }
+    if (packetsDoc != null) {
+        coverage << "`packets/structures.json` explains **${count(packetsDoc.packet_count)}** packet " +
+            "occurrences as **${count(packetsDoc.structure_count)}** structures, " +
+            "**${count(packetsDoc.class_count)}** classes and **${count(packetsDoc.field_count)}** " +
+            "fields; **${count(packetsDoc.resolved_count)}** of " +
+            "**${count(packetsDoc.packet_count)}** payloads carry a resolved codec, " +
+            "**${count(packetsDoc.codec_missing_count)}** has none and " +
+            "**${count(packetsDoc.unresolved_count)}** is unresolved."
+    }
+    def handshake = []
+    if (featureFlags != null) {
+        handshake << "**${count(featureFlags.flag_count)}** feature flags"
+    }
+    if (knownPacks != null) {
+        handshake << "**${count(knownPacks.known_pack_count)}** known packs"
+    }
+    if (!handshake.isEmpty()) {
+        coverage << "The handshake surface covers ${handshake.join(' and ')}."
+    }
+    if (blockEntities != null) {
+        coverage << "The block entity mapping covers **${count(blockEntities.mapping_count)}** blocks " +
+            "with **${count(blockEntities.block_entity_type_count)}** block entity types."
+    }
+    if (!coverage.isEmpty()) {
+        out << '**Coverage note:** ' << coverage.join(' ') << '\n\n'
+    }
+
+    // --- data catalog --------------------------------------------------------------------------
+
+    def catalogRows = [[
+        '(root)',
+        count(rootFileList.size()),
+        size(rootBytes),
+        'Run summary, the error/warning log and the schema validation report.'
+    ]]
+    directories.each { File directory ->
+        def stats = censusByDir[directory.name]
+        def description = folderDescriptions[directory.name]
+            ?: 'Documents produced by the matching extractor.'
+        catalogRows << ["`${directory.name}/`", count(stats.files), size(stats.bytes), description]
+    }
+    catalogRows << ['**Total**', "**${count(totalFiles)}**", "**${size(totalBytes)}**", '**All output**']
+
+    out << '## Data catalog\n\n'
+    out << '`(root)` is the output directory itself; every other row is a top-level directory.\n\n'
+    out << mdTable(['Folder', 'Files', 'Size', 'Contents'], ['---', '---:', '---:', '---'], catalogRows)
+    out << '\n'
+
+    // --- coverage details ----------------------------------------------------------------------
+
+    def details = []
+    if (blockStateIds != null) {
+        details << "- **Blocks:** ${count(blockStateIds.block_count)} blocks with their properties, " +
+            "materials, sounds and shapes; ${count(blockStateIds.state_count)} block states with a " +
+            "complete state id table (highest id ${count(blockStateIds.highest_state_id)})."
+    }
+    if (itemsDoc != null) {
+        def itemCount = asLong(itemsDoc?._meta?.entry_count)
+        def comparison = itemDefaults == null ? '' :
+            '; the game\'s own per-item component report is compared against every map ' +
+            "(${count(itemDefaults.component_assignments)} assignments over " +
+            "${count(itemDefaults.distinct_components)} distinct components)"
+        details << "- **Items:** ${count(itemCount)} items with component maps, component defaults, " +
+            "food, tool and enchantability documents${comparison}."
+    }
+    if (registryIndex != null) {
+        details << "- **Registries:** ${count(registryIndex.registry_count)} registries " +
+            "(${count(registryIndex.datapack_registry_count)} data pack, " +
+            "${count(registryIndex.builtin_registry_count)} built-in); the dumps hold " +
+            "${count(registryIndex.entry_count)} entries."
+    }
+    if (structureIndex != null) {
+        details << "- **Structures:** ${count(structureIndex.template_count)} templates; every " +
+            "palette, block position, block entity and entity is preserved."
+    }
+    if (allTags != null) {
+        details << "- **Tags:** ${count(allTags.registry_count)} tag registries, " +
+            "${count(allTags.tag_count)} tags and ${count(allTags.value_count)} resolved values."
+    }
+    if (locales != null) {
+        details << "- **Translations:** ${count(locales.locales?.size())} locales including " +
+            "`${asText(locales.fallback_locale) ?: 'en_us'}`, the full key inventory " +
+            "(${count(locales.registry_keys)} registry keys) and per-locale coverage in the manifest."
+    }
+    if (assetsIndex != null) {
+        def binaryAssets = asLong(assetsIndex.asset_count) - asLong(assetsIndex.json_assets_mirrored)
+        details << "- **Assets:** ${count(assetsIndex.asset_count)} assets in the index; " +
+            "${count(assetsIndex.json_assets_mirrored)} JSON assets mirrored under their original " +
+            "paths and ${count(binaryAssets)} binary assets listed with size and SHA-256 " +
+            "(${count(assetsIndex.distinct_content_hashes)} distinct contents)."
+    }
+    if (packetsDoc != null) {
+        details << "- **Packets:** ${count(packetsDoc.packet_count)} occurrences across " +
+            "${count(packetsDoc.structure_count)} structures, ${count(packetsDoc.class_count)} " +
+            "classes and ${count(packetsDoc.field_count)} fields; " +
+            "${count(packetsDoc.resolved_count)} payloads resolved, " +
+            "${count(packetsDoc.codec_missing_count)} packet without a codec, " +
+            "${count(packetsDoc.unresolved_count)} unresolved."
+    }
+    if (totalNbt > 0) {
+        def nbtCensus = [files: 0L, bytes: 0L]
+        dir.eachFileRecurse { File file ->
+            if (file.isFile() && file.name.toLowerCase(Locale.ROOT).endsWith('.nbt')) {
+                nbtCensus.files++
+                nbtCensus.bytes += file.length()
+            }
+        }
+        def registryFacts = registryIndex == null ? '' :
+            " ${count(registryIndex.nbt_registry_count)} of them are direct `registry_data` payloads; " +
+            "${count(registryIndex.datapack_registry_count)} data pack registries carry entry NBT, " +
+            'while built-in registries carry `has_nbt=0` and their identity.'
+        details << "- **NBT:** ${count(nbtCensus.files)} files (${count(nbtCensus.bytes)} bytes) " +
+            "written uncompressed and unframed.${registryFacts} `tags/all.nbt` is the direct " +
+            '`update_tags` payload, the `.nbt` files under `recipes/`, `loot/` and `advancements/` ' +
+            'are counted `id + NBT` streams, and `commands/tree.nbt` is a single VarInt-length-framed ' +
+            'command tree. Every payload is produced from the game codecs through `NbtOps`, never ' +
+            'through a JSON round trip.'
+    }
+    if (!details.isEmpty()) {
+        out << '### Coverage details\n\n'
+        details.each { out << it << '\n' }
+        out << '\n'
+    }
+
+    // --- packet structures ---------------------------------------------------------------------
+
+    def packetRows = (packetsDoc?.data ?: []).collect { it }.sort { it.name.toString() }.collect { packet ->
+        def states = (packet.states ?: []).collect { state ->
+            "${state.state}:${asLong(state.protocol_id)}"
+        }.join(', ')
+        def fields = (packet.fields ?: []).collect { it.name }.join(', ')
+        def codec = packet.codec == null ? '—' :
+            "${asText(packet.codec.kind) ?: 'unknown'} (${count(packet.codec.component_count)})"
+        [
+            quote(packet.name),
+            asText(packet.direction) ?: '—',
+            states.isEmpty() ? '—' : quote(states),
+            quote(packet.class),
+            asText(packet.format) ?: '—',
+            count(packet.field_count),
+            fields.isEmpty() ? '—' : fields,
+            quote(packet.serialized_by),
+            codec
+        ]
+    }
+
+    out << '## Packet structures\n\n'
+    out << '`packets/structures.json` carries every packet\'s connection state and direction, ' +
+        'protocol id, implementation class, field order and, where one exists, its `STREAM_CODEC` ' +
+        'components. Every field records a `wire_type` and a `wire_type_source`, plus a `note` that ' +
+        'describes its order and type when one is available. For `codec_constant` and `packet_spec` ' +
+        'fields the `wire_type` is the exact byte format; the remaining custom codecs mark the field ' +
+        'as `codec_defined`. `registry_data` and `update_tags` also carry payload notes with ' +
+        '`string`, `varint_prefixed_list` and `varint_prefixed_map` field types. `format_note` states ' +
+        'the same contract in the document itself.\n\n'
+    def formatNote = asText(packetsDoc?.format_note)
+    if (formatNote != null) {
+        out << '> ' << formatNote << '\n\n'
+    }
+    out << mdTable(
+        ['Packet', 'Direction', 'State:ID', 'Class', 'Format', 'Fields', 'Field names',
+         'Serialized by', 'Codec'],
+        ['---', '---', '---', '---', '---', '---:', '---', '---', '---'],
+        packetRows
+    )
+    out << '\n'
+
+    // --- extractor inventory -------------------------------------------------------------------
+
+    def extractorRows = []
+    (meta?.extractors ?: []).collect { it }.sort { it.name.toString() }.eachWithIndex { extractor, index ->
+        extractorRows << [
+            (index + 1).toString(),
+            quote(extractor.name),
+            asText(extractor.type) ?: '—',
+            quote(extractor.output),
+            count(extractor.entry_count),
+            extractor.success == null ? '—' : extractor.success.toString()
+        ]
+    }
+
+    if (!extractorRows.isEmpty()) {
+        out << '## Extractor inventory\n\n'
+        out << "**${count(meta?.total_extractors)}** extractors. Each row is one extractor's " +
+            'reported entry count and primary output; a single extractor can also write group or ' +
+            'side documents (for example `recipes`, `all_tags` and `client_assets`).\n\n'
+        out << mdTable(['#', 'Extractor', 'Type', 'Primary output', 'Entries', 'Succeeded'],
+            ['---', '---', '---', '---', '---:', '---'], extractorRows)
+        out << '\n'
+    }
+
+    // --- registry inventory --------------------------------------------------------------------
+
+    def registryRows = (registryIndex?.index ?: []).collect { it }.sort { it.id.toString() }.collect { registry ->
+        def protocolRange = '—'
+        if (registry.min_protocol_id != null && registry.max_protocol_id != null) {
+            protocolRange = "${count(registry.min_protocol_id)}–${count(registry.max_protocol_id)}"
+        } else if (registry.protocol_id != null) {
+            protocolRange = count(registry.protocol_id)
+        }
+        [
+            quote(registry.id),
+            asText(registry.source) ?: '—',
+            count(registry.entry_count),
+            protocolRange,
+            quote(registry.dump),
+            quote(registry.nbt)
+        ]
+    }
+
+    if (!registryRows.isEmpty()) {
+        out << '## Registry inventory\n\n'
+        out << "**${count(registryIndex?.registry_count)}** registries. `source=datapack` registries " +
+            'carry a full codec payload; `builtin` registries carry at least their ids and, where the ' +
+            'protocol has one, their protocol id. The curated catalogs are additionally available ' +
+            'under `blocks/`, `items/`, `entities/`, `worldgen/`, `misc/` and `gameplay/`.\n\n'
+        out << mdTable(['Registry', 'Source', 'Entries', 'Protocol ids', 'Dump', 'NBT'],
+            ['---', '---', '---:', '---:', '---', '---'], registryRows)
+        out << '\n'
+    }
+
+    // --- NBT wire format -----------------------------------------------------------------------
+
+    if (totalNbt > 0) {
+        out << '## NBT wire format\n\n'
+        out << 'The files under `registries/nbt/` are not wrapped NBT documents: each one is the ' +
+            'payload of a `registry_data` (0x07) packet. A consumer can prepend the packet id and a ' +
+            'VarInt length and send the bytes as they are, without parsing the NBT itself.\n\n'
+        out << mdTable(['Part', 'Type', 'Description'], ['---', '---', '---'], [
+            ['`registry_id`', 'String',
+             'VarInt length + UTF-8; the full path, for example `minecraft:worldgen/biome`'],
+            ['`entry_count`', 'VarInt', 'Number of entries that follow'],
+            ['`id`', 'String', 'Entry id; VarInt length + UTF-8'],
+            ['`has_nbt`', 'Bool', '`0x00` or `0x01`; `0x00` for built-in registry entries'],
+            ['`NBT`', 'bytes', "Only when `has_nbt=1`: the entry codec's raw, unnamed NBT"]
+        ])
+        out << '\nRules:\n\n'
+        out << '- The file is not gzip/zlib compressed and has no outer compound wrapper. The first ' +
+            'byte is the VarInt length of `registry_id`.\n'
+        out << '- Entries are written in ascending `protocol_id` order (`0, 1, 2, ...`), which is the ' +
+            'order a client expects.\n'
+        out << '- When `has_nbt=0` the entry has no NBT member at all: only `id` and `has_nbt`.\n'
+        out << '- There is no trailing byte; `entry_count` matches the number of decoded entries ' +
+            'exactly.\n'
+        out << '- The registry id is never shortened: `minecraft:worldgen/biome`, not ' +
+            '`minecraft:biome`.\n\n'
+
+        out << '### `tags/all.nbt` — `update_tags` (0x0E)\n\n'
+        out << '```text\n'
+        out << '[registry_count: VarInt]\n'
+        out << '[for each registry]\n'
+        out << '  [registry_id: String]\n'
+        out << '  [tag_count: VarInt]\n'
+        out << '  [for each tag]\n'
+        out << '    [tag_name: String]\n'
+        out << '    [entry_count: VarInt]\n'
+        out << '    [for each entry: VarInt]   # protocol id inside the registry\n'
+        out << '```\n\n'
+        out << 'Registry and tag names are alphabetical and entries are in ascending protocol id ' +
+            'order. Only non-empty tags (`entry_count > 0`) enter the payload, and a registry group ' +
+            'that holds only empty tags is skipped as well. `tags/client_tags.bin` is the same ' +
+            'payload restricted to the registries a vanilla client expects, in the order configured ' +
+            'in `config/versions/<version>/tag_registries.json`.\n\n'
+
+        out << '### Counted streams and the command tree\n\n'
+        out << '`recipes/minecraft.nbt`, `loot/minecraft.nbt` and `advancements/minecraft.nbt` share ' +
+            'one counted layout:\n\n'
+        out << '```text\n'
+        out << '[count: VarInt]\n'
+        out << '[for each entry]\n'
+        out << '  [id: String]\n'
+        out << '  [NBT: bytes]\n'
+        out << '```\n\n'
+        out << '`commands/tree.nbt` carries the single command-tree NBT as ' +
+            '`[nbt_length: VarInt][NBT: bytes]`. It is the only framed `.nbt` file: an NBT compound ' +
+            'starts with `0A`, and a file whose first byte is not `0A` is never mistaken for a bare ' +
+            'payload. Every other `.nbt` file is a packet payload and carries no extra framing.\n\n'
+
+        def hexSample = new File(dir, 'registries/nbt/minecraft/dimension_type.nbt')
+        if (hexSample.isFile()) {
+            byte[] head = new byte[48]
+            int read = 0
+            hexSample.withInputStream { stream ->
+                while (read < head.length) {
+                    int step = stream.read(head, read, head.length - read)
+                    if (step < 0) {
+                        break
+                    }
+                    read += step
+                }
+            }
+            def hex = (0..<read).collect { String.format(Locale.ROOT, '%02X', head[it]) }.join(' ')
+            out << "### Hex dump\n\nExample: `registries/nbt/minecraft/dimension_type.nbt` " +
+                "(first ${read} bytes)\n\n"
+            out << '```text\n' << hex << '\n```\n\n'
+            out << 'In order: the VarInt length of `registry_id`, the registry id itself, the ' +
+                '`entry_count` VarInt, then for each entry its id length, its id, the `has_nbt` flag ' +
+                'and, when the flag is set, the `0A` compound root of the entry NBT. That last `0A` ' +
+                'belongs to the entry payload, not to a file wrapper.\n\n'
+        }
+
+        out << '### Raw NBT mode (`--nbt-format raw` or `both`)\n\n'
+        out << '`--nbt-format wire` is the default and writes the packet payloads above unchanged. ' +
+            '`raw` splits every entry into its own unframed `.nbt` file; `both` writes both ' +
+            'representations from the same in-memory payloads.\n\n'
+        out << '- Registries: `registries/raw/<namespace>/<path>/manifest.json` is a direct entry id ' +
+            'map; each value carries `protocol_id` and a `file` relative to the manifest directory. ' +
+            'Built-in entries have no NBT, so their `file` is null.\n'
+        out << '- `tags/raw/manifest.json`, `recipes/raw/manifest.json`, `loot/raw/manifest.json`, ' +
+            '`advancements/raw/manifest.json` and `commands/raw/manifest.json` follow the same ' +
+            'principle. Tag files are self-describing compounds with `registry`, `id`, `replace`, ' +
+            '`values` and `protocol_ids`, so empty tags the wire format skips are still preserved.\n'
+        out << '- Raw files carry no length prefix, gzip header or outer compound wrapper: a ' +
+            'compound entry starts directly with its own `0A` type byte.\n'
+        out << '- The tests parse every manifest and every raw NBT file and check registry ' +
+            '`has_nbt` against the presence of `file` and against the decoded wire payload.\n\n'
+    }
+
+    // --- limitations ---------------------------------------------------------------------------
+
+    out << '## Known limits\n\n'
+    knownLimits.eachWithIndex { String limit, int index ->
+        out << "${index + 1}. ${limit}\n"
+    }
+    out << '\nSee the [README](README.md#verification) for how the output is verified and what the ' +
+        'test suite guarantees.\n\n'
+
+    // --- reproduction --------------------------------------------------------------------------
+
+    out << '## Reproducing this catalog\n\n'
+    out << '```bash\n'
+    out << '# the extraction itself\n'
+    out << './gradlew runExtractor\n\n'
+    out << '# rebuild this catalog from that output\n'
+    out << './gradlew generateOutputCatalog\n'
+    out << '```\n\n'
+    out << 'Output location: `build/extractor_output`. The catalog is assembled from `_meta.json`, ' +
+        '`_errors.json`, `_validation.json` and the per-category documents, so it can only be ' +
+        'regenerated after a real run.\n\n'
+
+    // --- appendix ------------------------------------------------------------------------------
+
+    def allFiles = []
+    rootFileList.each { allFiles << it.name }
+    directories.each { File directory ->
+        directory.eachFileRecurse { File file ->
+            if (file.isFile()) {
+                def relative = directory.toPath().relativize(file.toPath()).toString()
+                allFiles << directory.name + '/' + relative.replace(File.separator, '/')
+            }
+        }
+    }
+    allFiles.sort()
+
+    out << '## Appendix: full file list\n\n'
+    out << '<details>\n'
+    out << "<summary><strong>Show all ${count(allFiles.size())} files</strong></summary>\n\n"
+    out << '```text\n'
+    allFiles.each { out << it << '\n' }
+    out << '```\n\n'
+    out << '</details>\n'
+
+    return out.toString()
+}
+
+// ---------------------------------------------------------------------------------------------
+// Tasks
+// ---------------------------------------------------------------------------------------------
+
+def generateOutputCatalog = tasks.register('generateOutputCatalog') {
+    group = 'terila'
+    description = 'Regenerates OUTPUT_CATALOG.md in English from the last extraction output.'
+
+    doLast {
+        if (!catalogOutputDir.isDirectory() || !new File(catalogOutputDir, '_meta.json').isFile()) {
+            logger.lifecycle(
+                "No extraction found in ${catalogOutputDir}; keeping the committed " +
+                    'OUTPUT_CATALOG.md as it is (run ./gradlew runExtractor first).'
+            )
+            return
+        }
+        def text = renderCatalog(catalogOutputDir)
+        if (catalogFile.isFile() && catalogFile.getText('UTF-8') == text) {
+            logger.lifecycle("OUTPUT_CATALOG.md is up to date with ${catalogOutputDir}.")
+            return
+        }
+        catalogFile.setText(text, 'UTF-8')
+        logger.lifecycle("Wrote OUTPUT_CATALOG.md from ${catalogOutputDir}.")
+    }
+}
+
+def installGitHooks = tasks.register('installGitHooks') {
+    group = 'terila'
+    description = 'Installs the versioned hooks in .githooks into this checkout\'s git hooks directory.'
+
+    doLast {
+        def source = new File(rootDir, '.githooks')
+        if (!source.isDirectory()) {
+            logger.lifecycle('No .githooks directory; nothing to install.')
+            return
+        }
+        def gitDir = new File(rootDir, '.git')
+        if (!gitDir.isDirectory()) {
+            logger.lifecycle("No .git directory in ${rootDir}; the hooks were not installed.")
+            return
+        }
+        def hooksDir = new File(gitDir, 'hooks')
+        if (!hooksDir.isDirectory() && !hooksDir.mkdirs()) {
+            logger.lifecycle("Cannot create ${hooksDir}; the hooks were not installed.")
+            return
+        }
+        source.listFiles()?.findAll { it.isFile() }?.sort { it.name }?.each { File hook ->
+            def target = new File(hooksDir, hook.name)
+            if (target.isFile() && target.getText('UTF-8') == hook.getText('UTF-8')) {
+                return
+            }
+            target.setText(hook.getText('UTF-8'), 'UTF-8')
+            target.setExecutable(true, false)
+            logger.lifecycle("Installed git hook ${target}.")
+        }
+    }
+}

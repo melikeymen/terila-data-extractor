@@ -1,0 +1,17 @@
+# Keep one canonical line ending in the repository and let checkouts adapt.
+# The worktree of a Windows checkout may still use CRLF, but the files git stores are LF, which is
+# what the tests' golden digests and the generated catalog expect.
+* text=auto eol=lf
+
+# Batch files have to keep CRLF for cmd.exe; the Gradle wrapper script has to stay LF for sh.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+gradlew text eol=lf
+
+# Binary data that must never be normalised.
+*.jar binary
+*.bin binary
+*.nbt binary
+*.png binary
+*.jpg binary
+*.ico binary
