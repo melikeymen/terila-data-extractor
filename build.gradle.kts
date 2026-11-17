@@ -381,6 +381,11 @@ tasks.test {
     dependsOn(extractMinecraft)
     // Tests that load the vanilla data set need the extracted runtime on the classpath.
     classpath += files(mcServerJar, mcLibraries)
+    // The test fixture extracts from the data generator's reports, so they have to exist before the
+    // tests run. Without this a clean checkout (a CI runner, for example) produces no report-backed
+    // documents and the golden digest cannot match. The task is up to date once the reports exist
+    // and only re-runs when the Minecraft version changes.
+    dependsOn("runDataGenerator")
     minHeapSize = "1g"
     maxHeapSize = "3g"
     testLogging {
