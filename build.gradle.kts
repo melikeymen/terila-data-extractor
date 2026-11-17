@@ -386,6 +386,11 @@ tasks.test {
     // documents and the golden digest cannot match. The task is up to date once the reports exist
     // and only re-runs when the Minecraft version changes.
     dependsOn("runDataGenerator")
+    // Same reason for the locales: the client jar only carries en_us, so a run without the
+    // downloaded language files extracts one locale instead of the whole set, and the golden digest
+    // (which covers translations/locales/ and the per-locale counts) cannot match. The task is up to
+    // date once the files exist.
+    dependsOn("downloadLanguages")
     minHeapSize = "1g"
     maxHeapSize = "3g"
     testLogging {
