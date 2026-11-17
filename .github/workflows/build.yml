@@ -31,6 +31,11 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # The repository is maintained on Windows, where the file system does not carry the
+      # executable bit, so a fresh checkout can lose it. Restore it before running the wrapper.
+      - name: Restore script permissions
+        run: chmod +x gradlew .githooks/pre-commit
+
       # The build downloads the Minecraft bundler and the client jar once and verifies their SHA-1,
       # so the cache only saves the download, never the verification.
       - name: Cache the Minecraft artifacts
