@@ -20,7 +20,7 @@ val minecraftVersion = property("minecraft_version") as String
 val fabricLoaderVersion = property("fabric_loader_version") as String
 val javaVersion = property("java_version") as String
 
-version = "1.0.0"
+version = "1.0.0-beta.1+26.3"
 group = "com.terila"
 
 base {

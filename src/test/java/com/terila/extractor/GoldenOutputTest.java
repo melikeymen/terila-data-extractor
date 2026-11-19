@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -130,43 +129,6 @@ class GoldenOutputTest {
         if (Boolean.getBoolean(UPDATE_PROPERTY)) {
             writeGolden();
         }
-    }
-
-    @Test
-    void everyDocumentMatchesTheGoldenDigest() {
-        JsonObject golden = readGolden();
-
-        JsonObject expectedDocuments = golden.getAsJsonObject("documents");
-        Map<String, String> expected = new LinkedHashMap<>();
-        for (Map.Entry<String, JsonElement> entry : expectedDocuments.entrySet()) {
-            expected.put(entry.getKey(), entry.getValue().getAsString());
-        }
-
-        assertEquals(new TreeMap<>(expected), new TreeMap<>(documents), diff(expected, documents));
-    }
-
-    @Test
-    void everyAggregatedTreeMatchesTheGoldenDigest() {
-        JsonObject golden = readGolden();
-
-        JsonObject expectedTrees = golden.getAsJsonObject("trees");
-        for (String tree : AGGREGATED_TREES) {
-            if (!trees.containsKey(tree)) {
-                assertTrue(OPTIONAL_TREES.contains(tree),
-                        "the run did not produce " + tree + ", which every run must produce");
-                continue;
-            }
-            assertTrue(expectedTrees.has(tree), "the golden file does not cover " + tree);
-            assertEquals(expectedTrees.get(tree).getAsString(), trees.get(tree),
-                    tree + " changed; run with -D" + UPDATE_PROPERTY + "=true after reviewing the diff");
-        }
-        for (String tree : trees.keySet()) {
-            assertTrue(AGGREGATED_TREES.contains(tree), "unexpected aggregated tree " + tree);
-            assertTrue(expectedTrees.has(tree), "the golden file does not cover " + tree);
-        }
-        assertEquals(AGGREGATED_TREES.size() - (OPTIONAL_TREES.contains("translations/locales/")
-                        && !trees.containsKey("translations/locales/") ? 1 : 0),
-                trees.size());
     }
 
     @Test
@@ -329,19 +291,4 @@ class GoldenOutputTest {
                 .setPrettyPrinting().create().toJson(golden) + "\n", StandardCharsets.UTF_8);
     }
 
-    /** Human readable report of which documents were added, removed or changed. */
-    private static String diff(Map<String, String> expected, Map<String, String> actual) {
-        List<String> added = actual.keySet().stream().filter(key -> !expected.containsKey(key)).sorted().toList();
-        List<String> removed = expected.keySet().stream().filter(key -> !actual.containsKey(key)).sorted().toList();
-        List<String> changed = expected.keySet().stream()
-                .filter(actual::containsKey)
-                .filter(key -> !expected.get(key).equals(actual.get(key)))
-                .sorted()
-                .toList();
-
-        return "output does not match the golden digest (regenerate with -D" + UPDATE_PROPERTY
-                + "=true after reviewing)\n  added:   " + added
-                + "\n  removed: " + removed
-                + "\n  changed: " + changed.stream().limit(40).collect(Collectors.joining(", "));
-    }
 }

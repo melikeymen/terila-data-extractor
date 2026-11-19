@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "terila-extractor",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1+26.3",
   "name": "Terila Data Extractor",
   "description": "Extracts the complete Minecraft 26.3 data set",
   "authors": [

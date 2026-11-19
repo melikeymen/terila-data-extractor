@@ -21,7 +21,7 @@ import net.minecraft.server.packs.metadata.pack.PackFormat;
 public final class ExtractorVersion {
 
     /** Version of the extractor itself; bump on output-format changes. */
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.0-beta.1+26.3";
 
     private static final WorldVersion WORLD = SharedConstants.getCurrentVersion();
 
