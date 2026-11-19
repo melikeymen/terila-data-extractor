@@ -233,13 +233,17 @@ val downloadLanguages = tasks.register("downloadLanguages") {
 
     doLast {
         val slurper = JsonSlurper()
-        if (!cachedAssetIndex.isFile) {
-            val index = resolveAssetIndex()
+        // Mojang can revise a version's asset index in place (26.3 gained two locales that way), so a
+        // cached copy is only reused while it still matches the manifest. Without this check a stale
+        // cache silently extracts fewer locales than a fresh checkout, and the golden digest fails with
+        // a difference that no code change explains.
+        val expectedIndex = resolveAssetIndex()
+        if (!cachedAssetIndex.isFile || sha1Of(cachedAssetIndex) != expectedIndex.sha1) {
             logger.lifecycle("downloading the $minecraftVersion asset index...")
-            httpDownload(index.url, cachedAssetIndex)
+            httpDownload(expectedIndex.url, cachedAssetIndex)
             val actual = sha1Of(cachedAssetIndex)
-            check(actual == index.sha1) {
-                "asset index checksum mismatch: expected ${index.sha1}, got $actual"
+            check(actual == expectedIndex.sha1) {
+                "asset index checksum mismatch: expected ${expectedIndex.sha1}, got $actual"
             }
         }
 
