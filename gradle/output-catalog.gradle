@@ -181,8 +181,7 @@ def renderCatalog = { File dir ->
     out << '# Terila Data Extractor — Output Catalog\n\n'
     out << '> Generated from the real extraction output under `build/extractor_output` by ' +
         '`./gradlew generateOutputCatalog`.\n'
-    out << "> Last extraction: **${reportStamp}** · run time **${runSeconds}** · extractor " +
-        "**${asText(meta?.extractor_version) ?: 'unknown'}**\n"
+    out << "> Last extraction: **${reportStamp}** · run time **${runSeconds}**\n"
     out << '>\n'
     out << "> Target: **Minecraft ${asText(meta?.minecraft_version) ?: 'unknown'}** · protocol " +
         "**${asText(meta?.protocol_version) ?: 'unknown'}** · data pack " +

@@ -290,7 +290,6 @@ public final class ExtractorContext {
      */
     public JsonObject meta(String extractorName, int entryCount) {
         JsonObject meta = new JsonObject();
-        meta.addProperty("extractor_version", ExtractorVersion.VERSION);
         meta.addProperty("minecraft_version", ExtractorVersion.MINECRAFT_VERSION);
         meta.addProperty("protocol_version", ExtractorVersion.PROTOCOL_VERSION);
         meta.addProperty("data_pack_version", ExtractorVersion.DATA_PACK_VERSION);

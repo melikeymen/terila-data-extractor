@@ -113,7 +113,6 @@ public final class ExtractionReport {
         root.addProperty("world_version", ExtractorVersion.WORLD_VERSION);
         root.addProperty("data_pack_version", ExtractorVersion.DATA_PACK_VERSION);
         root.addProperty("resource_pack_version", ExtractorVersion.RESOURCE_PACK_VERSION);
-        root.addProperty("extractor_version", ExtractorVersion.VERSION);
         root.addProperty("generated_at", finishedAt.toString());
         root.addProperty("duration_ms", duration().toMillis());
         root.addProperty("total_extractors", results.size());

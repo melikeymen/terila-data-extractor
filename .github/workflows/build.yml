@@ -14,9 +14,12 @@ concurrency:
 
 jobs:
   build:
-    name: Build and test (JDK 25)
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    name: Build and test (JDK 25, Windows)
+    # The project is maintained on Windows and the golden digest pins the exact output of the
+    # maintained platform, so the build runs there too: a runner on another file system produces
+    # a slightly different output and fails the digest for a reason no code change explains.
+    runs-on: windows-latest
+    timeout-minutes: 60
 
     steps:
       - name: Check out the repository
@@ -31,11 +34,6 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # The repository is maintained on Windows, where the file system does not carry the
-      # executable bit, so a fresh checkout can lose it. Restore it before running the wrapper.
-      - name: Restore script permissions
-        run: chmod +x gradlew .githooks/pre-commit
-
       # The build downloads the Minecraft bundler and the client jar once and verifies their SHA-1,
       # so the cache only saves the download, never the verification.
       - name: Cache the Minecraft artifacts
@@ -47,10 +45,10 @@ jobs:
       # `build` also installs the versioned git hooks; `test` runs the full pipeline and the
       # raw/both fixture, which is the part that actually verifies the output.
       - name: Build and test
-        run: ./gradlew build --no-daemon --stacktrace
+        run: .\gradlew.bat build --no-daemon --stacktrace
 
       - name: Build the Javadoc
-        run: ./gradlew javadoc --no-daemon
+        run: .\gradlew.bat javadoc --no-daemon
 
       - name: Upload test reports
         if: failure()

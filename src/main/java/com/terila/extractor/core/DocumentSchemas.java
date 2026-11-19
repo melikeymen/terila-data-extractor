@@ -144,7 +144,6 @@ public final class DocumentSchemas {
      * would otherwise go unnoticed, and metadata is the only part of the output every consumer reads.
      */
     private static final JsonObject META_BLOCK = schema(fields(
-            "extractor_version", string(),
             "minecraft_version", string(),
             "protocol_version", integer(0),
             "data_pack_version", string(),
@@ -154,7 +153,7 @@ public final class DocumentSchemas {
             "extractor_name", string(),
             "entry_count", integer(0)
     ), false,
-            "extractor_version", "minecraft_version", "protocol_version", "data_pack_version",
+            "minecraft_version", "protocol_version", "data_pack_version",
             "world_version", "generated_at", "source", "extractor_name", "entry_count");
 
     /**
@@ -271,7 +270,6 @@ public final class DocumentSchemas {
 
         // The run level reports, written by ExtractionRunner rather than an extractor.
         schemas.put("_meta.json", schema(fields(
-                "extractor_version", string(),
                 "minecraft_version", string(),
                 "protocol_version", integer(0),
                 "world_version", integer(0),
@@ -289,7 +287,7 @@ public final class DocumentSchemas {
                 "report_hash", string(),
                 "changelog", object(true, "generator", "format")
         ), true,
-                "extractor_version", "minecraft_version", "protocol_version", "world_version",
+                "minecraft_version", "protocol_version", "world_version",
                 "data_pack_version", "resource_pack_version", "generated_at", "duration_ms",
                 "total_extractors", "successful_extractors", "failed_extractors", "total_entries",
                 "extractors", "report_hash", "changelog"));

@@ -1,7 +1,7 @@
 # Terila Data Extractor — Output Catalog
 
 > Generated from the real extraction output under `build/extractor_output` by `./gradlew generateOutputCatalog`.
-> Last extraction: **2026-11-15 21:55:39 UTC** · run time **44.2 s** · extractor **1.0.0**
+> Last extraction: **2026-11-15 21:55:39 UTC** · run time **44.2 s**
 >
 > Target: **Minecraft 26.3** · protocol **777** · data pack **121.0** · world version **5023**
 

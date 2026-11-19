@@ -399,6 +399,9 @@ tasks.test {
     maxHeapSize = "3g"
     testLogging {
         events("passed", "skipped", "failed")
+        // A golden digest failure names the documents that moved in its message; printing the whole
+        // exception is what makes a CI run diagnosable without downloading the HTML report.
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
         showStandardStreams = false
     }
     // `-Dterila.golden.update=true` (and any future terila.* switch) has to reach the test JVM.

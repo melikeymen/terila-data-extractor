@@ -171,7 +171,7 @@ class OutputValidatorTest {
 
     private static String meta() {
         return """
-                {"extractor_version": "1.0.0", "minecraft_version": "26.3", "protocol_version": 777,
+                {"minecraft_version": "26.3", "protocol_version": 777,
                  "data_pack_version": "121.0", "world_version": 5023,
                  "generated_at": "2026-09-17T00:00:00Z", "source": "minecraft:vanilla",
                  "extractor_name": "test", "entry_count": 0}
